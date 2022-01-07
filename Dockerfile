@@ -1,15 +1,20 @@
-FROM golang:1.10 AS build
+FROM golang:1.17-alpine AS build
 WORKDIR /go/src
 COPY go ./go
 COPY main.go .
 
-ENV CGO_ENABLED=0
-RUN go get -d -v ./...
 
-RUN go build -a -installsuffix cgo -o openapi .
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod tidy
+
+ENV CGO_ENABLED=0
+
+RUN go build .
 
 FROM scratch AS runtime
 ENV GIN_MODE=release
-COPY --from=build /go/src/openapi ./
-EXPOSE 8080/tcp
-ENTRYPOINT ["./openapi"]
+COPY --from=build /go/src/scorecard-backend ./
+EXPOSE 8080
+ENTRYPOINT ["./scorecard-backend"]
