@@ -20,7 +20,7 @@ import (
 	//
 	//sw "github.com/GIT_USER_ID/GIT_REPO_ID/go"
 	//
-	sw "github.com/arup-group/sustainability-scorecard/backend/go"
+	sw "github.com/mharv/scorecard/go"
 )
 
 func main() {

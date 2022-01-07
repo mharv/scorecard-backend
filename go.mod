@@ -1,4 +1,4 @@
-module github.com/arup-group/sustainability-scorecard/backend
+module github.com/mharv/scorecard
 
 go 1.17
 
