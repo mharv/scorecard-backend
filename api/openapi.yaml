@@ -1,0 +1,971 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: mitchell.harvey@arup.com
+    name: Mitchell Harvey
+  description: inital pass at scorecard API
+  title: scorecard
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /users/{userId}:
+    delete:
+      description: Remove the user with the matching user ID.
+      operationId: delete-users-userId
+      parameters:
+      - description: Id of an existing user.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          description: User Deleted
+        "404":
+          description: User Not Found
+      tags: []
+    get:
+      description: Retrieve the information of the user with the matching user ID.
+      operationId: get-users-userId
+      parameters:
+      - description: Id of an existing user.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    email: alice.smith@gmail.com
+                    createdDate: 2019-08-24
+                    accessLevel: reviewer
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User Found
+        "404":
+          description: User Not Found
+      summary: Get User Info by User ID
+      tags: []
+    put:
+      description: Update the information of the user with the matching user ID.
+      operationId: put-users-userId
+      parameters:
+      - description: Id of an existing user.
+        explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              user edit example:
+                value:
+                  id: 142
+                  email: alice.john@gmail.com
+                  createdDate: 2019-08-24
+                  accessLevel: reviewer
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Edit user details Alice smith:
+                  value:
+                    id: 142
+                    email: alice.john@gmail.com
+                    createdDate: 2019-08-24
+                    accessLevel: reviewer
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User Updated
+        "404":
+          description: User Not Found
+      tags: []
+  /user:
+    post:
+      description: Create a new user.
+      operationId: post-user
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          application/json:
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: 1996-08-24
+            schema:
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  format: date
+                  type: string
+              required:
+              - dateOfBirth
+              - email
+              - firstName
+              - lastName
+              type: object
+        description: Post the necessary fields for the API to create a new user.
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    email: bob.fellow@gmail.com
+                    createdDate: 2020-11-18
+                    accessLevel: seniorLeadership
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User Created
+        "400":
+          description: Missing Required Information
+        "409":
+          description: Email Already Taken
+      summary: Create New User
+      tags: []
+  /users:
+    get:
+      description: Returns all Users
+      operationId: get-users
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                get all:
+                  value:
+                  - id: 142
+                    email: alice.smith@gmail.com
+                    createdDate: 2019-08-24
+                    accessLevel: reviewer
+                  - id: 14
+                    email: dean.morris@gmail.com
+                    createdDate: 2012-08-24
+                    accessLevel: seniorLeadership
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /stores/{storeId}:
+    delete:
+      description: Removes store with corresponding storeId
+      operationId: delete-stores-storeId
+      parameters:
+      - explode: false
+        in: path
+        name: storeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Store deleted
+        "404":
+          description: Store Not Found
+      tags: []
+    get:
+      description: returns a single store by storeId
+      operationId: get-stores-storeId
+      parameters:
+      - explode: false
+        in: path
+        name: storeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples: {}
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+    put:
+      description: edits the store with corresponding storeId
+      operationId: put-stores-storeId
+      parameters:
+      - explode: false
+        in: path
+        name: storeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            examples:
+              example-1:
+                value:
+                  id: 1
+                  designer: 13
+                  region: Australasia
+                  name: Aesop Southland
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                return store after edit:
+                  value:
+                    id: 1
+                    designer: 13
+                    region: Australasia
+                    name: Aesop Southland
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: OK
+        "404":
+          description: Store Not Found
+      tags: []
+  /stores:
+    get:
+      description: return all store data
+      operationId: get-stores
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                example get all:
+                  value:
+                  - id: 1
+                    designer: 14
+                    region: ANZ
+                    name: Aesop Southland
+                  - id: 2
+                    designer: 13
+                    region: ANZ
+                    name: Aesop Melbourne CBD
+              schema:
+                items:
+                  $ref: '#/components/schemas/Store'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /store:
+    post:
+      description: create a new store in the DB
+      operationId: post-store
+      requestBody:
+        content:
+          application/json:
+            examples:
+              create new store payload example:
+                value:
+                  id: 2
+                  designer: 3
+                  region: Americas
+                  name: Aesop New York
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Aesop New York create store example:
+                  value:
+                    id: 2
+                    designer: 3
+                    region: Americas
+                    name: Aesop New York
+              schema:
+                $ref: '#/components/schemas/Store'
+          description: Store created
+      tags: []
+  /epicMaterials:
+    get:
+      description: returns all epic materials
+      operationId: get-epicMaterials
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                get all epic material data:
+                  value:
+                  - id: 1
+                    category: Concrete and plaster products
+                    type: Blocks
+                    material: Concrete block
+                    functionalUnit: kg
+                    embodiedEnergy: 2.6
+                    embodiedWater: 3.7
+                    embodiedGHGE: 0.24
+                    moreInformationUrl: http://doi.org/10.26188/5da552ea39cdc
+              schema:
+                items:
+                  $ref: '#/components/schemas/EpicMaterial'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /epicMaterials/{epicMaterialId}:
+    get:
+      description: return epic material with corresponding epicMaterialId
+      operationId: get-epicMaterials-epicMaterialId
+      parameters:
+      - explode: false
+        in: path
+        name: epicMaterialId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                concrete block:
+                  value:
+                    id: 1
+                    category: Concrete and plaster products
+                    type: Blocks
+                    material: Concrete block
+                    functionalUnit: kg
+                    embodiedEnergy: 2.6
+                    embodiedWater: 3.7
+                    embodiedGHGE: 0.24
+                    moreInformationUrl: http://doi.org/10.26188/5da552ea39cdc
+              schema:
+                $ref: '#/components/schemas/EpicMaterial'
+          description: OK
+        "404":
+          description: Epic material Id Not Found
+      summary: Your GET endpoint
+      tags: []
+  /comment:
+    post:
+      description: create a new comment
+      operationId: post-comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: new comment created
+      tags: []
+  /allMaterialComments/{materialInstanceId}:
+    get:
+      description: get all comments by material instance id
+      operationId: get-comments-materialInstanceId
+      parameters:
+      - explode: false
+        in: path
+        name: materialInstanceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Comment'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /comments/{commentId}:
+    delete:
+      description: remove a comment
+      operationId: delete-comments-commentId
+      parameters:
+      - explode: false
+        in: path
+        name: commentId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: comment Not Found
+      tags: []
+  /materialType:
+    post:
+      description: create a new material type
+      operationId: post-materialType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialType'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialType'
+          description: material type created
+      tags: []
+  /materialTypes:
+    get:
+      description: return all material types
+      operationId: get-materialTypes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MaterialType'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /materialTypes/{materialTypeId}:
+    delete:
+      description: delete materialtype by id
+      operationId: delete-materialTypes-materialTypeId
+      parameters:
+      - explode: false
+        in: path
+        name: materialTypeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties: {}
+              type: object
+      responses:
+        "200":
+          description: materialtype deleted
+      tags: []
+    get:
+      description: get material type by id
+      operationId: get-materialTypes-materialTypeId
+      parameters:
+      - explode: false
+        in: path
+        name: materialTypeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialType'
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+    put:
+      description: edit material type
+      operationId: put-materialTypes-materialTypeId
+      parameters:
+      - explode: false
+        in: path
+        name: materialTypeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialType'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialType'
+          description: OK
+      tags: []
+  /materialInstance:
+    post:
+      description: create material instance
+      operationId: post-materialInstance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialInstance'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialInstance'
+          description: material instance created
+      tags: []
+  /materialInstancesByStore/{storeId}:
+    get:
+      description: get an array of material instances by store id
+      operationId: get-materialInstances-storeId
+      parameters:
+      - explode: false
+        in: path
+        name: storeId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MaterialInstance'
+                type: array
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+  /materialInstances/{materialInstanceId}:
+    put:
+      description: edit a material instance
+      operationId: put-materialInstances-materialInstanceId
+      parameters:
+      - explode: false
+        in: path
+        name: materialInstanceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialInstance'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialInstance'
+          description: OK
+      tags: []
+  /materialInstanceHistory/{materialInstanceId}:
+    get:
+      description: get all history of a material instance
+      operationId: get-materialInstanceHistory-materialInstanceId
+      parameters:
+      - explode: false
+        in: path
+        name: materialInstanceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: OK
+      summary: Your GET endpoint
+      tags: []
+components:
+  requestBodies:
+    inline_object:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+  schemas:
+    User:
+      example:
+        createdDate: createdDate
+        accessLevel: accessLevel
+        id: 0
+        email: email
+      properties:
+        id:
+          description: Unique identifier for the given user.
+          type: integer
+        email:
+          type: string
+        createdDate:
+          description: The date that the user was created.
+          type: string
+        accessLevel:
+          type: string
+      required:
+      - accessLevel
+      - email
+      - id
+      title: User
+      type: object
+      x-examples:
+        Alice Smith:
+          id: 142
+          email: alice.smith@gmail.com
+          createdDate: 2019-08-24
+          accessLevel: reviewer
+        Dean Morris:
+          id: 14
+          email: dean.morris@gmail.com
+          createdDate: 2012-08-24
+          accessLevel: seniorLeadership
+    Store:
+      description: Store metadata for each individual Aesop store
+      example:
+        tapNumber: 4
+        country: country
+        signedNda: true
+        marketingMediaType: marketingMediaType
+        reviewerId: 7
+        contractorId: 5
+        locationType: locationType
+        leaseTermInYears: 6.027456183070403
+        reviewRequired: 1
+        scorecardType: scorecardType
+        bohSqm: 9.301444243932576
+        treatmentSpace: true
+        signedCoc: true
+        storeName: storeName
+        currency: currency
+        id: 0
+        architectId: 5
+        bathroom: true
+        posSqm: 3.616076749251911
+        otherSpace: otherSpace
+        retailSqm: 7.061401241503109
+        roicCapex: roicCapex
+        projectManagerId: 1
+        totalSqm: 2.3021358869347655
+        mposSqm: 2.027123023002322
+      properties:
+        id:
+          type: integer
+        storeName:
+          type: string
+        country:
+          type: string
+        scorecardType:
+          type: string
+        locationType:
+          type: string
+        roicCapex:
+          type: string
+        currency:
+          type: string
+        leaseTermInYears:
+          type: number
+        projectManagerId:
+          type: integer
+        architectId:
+          type: integer
+        contractorId:
+          type: integer
+        signedCoc:
+          type: boolean
+        signedNda:
+          type: boolean
+        totalSqm:
+          type: number
+        retailSqm:
+          type: number
+        bohSqm:
+          type: number
+        marketingMediaType:
+          type: string
+        posSqm:
+          type: number
+        mposSqm:
+          type: number
+        tapNumber:
+          type: integer
+        treatmentSpace:
+          type: boolean
+        bathroom:
+          type: boolean
+        otherSpace:
+          type: string
+        reviewerId:
+          type: integer
+        reviewRequired:
+          type: integer
+      title: Store
+      type: object
+      x-examples: {}
+    EpicMaterial:
+      description: Material metadata
+      example:
+        material: material
+        embodiedGHGE: 5.962133916683182
+        moreInformationUrl: moreInformationUrl
+        functionalUnit: functionalUnit
+        embodiedEnergy: 6.027456183070403
+        id: 0
+        category: category
+        type: type
+        embodiedWater: 1.4658129805029452
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+        type:
+          type: string
+        material:
+          type: string
+        functionalUnit:
+          type: string
+        embodiedEnergy:
+          type: number
+        embodiedWater:
+          type: number
+        embodiedGHGE:
+          type: number
+        moreInformationUrl:
+          type: string
+      title: EpicMaterial
+      type: object
+      x-examples:
+        concrete block example:
+          id: 1
+          category: Concrete and plaster products
+          type: Blocks
+          material: Concrete block
+          functionalUnit: kg
+          embodiedEnergy: 2.6
+          embodiedWater: 3.7
+          embodiedGHGE: 0.24
+          moreInformationUrl: http://doi.org/10.26188/5da552ea39cdc
+    Comment:
+      description: comments that are made on materials during review
+      example:
+        materialInstanceId: 6
+        reviewerId: 1
+        commentDate: commentDate
+        id: 0
+        content: content
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        materialInstanceId:
+          type: integer
+        reviewerId:
+          type: integer
+        commentDate:
+          type: string
+      title: Comment
+      type: object
+    MaterialInstance:
+      example:
+        materialStatus: materialStatus
+        supplierName: supplierName
+        supplierLocation: supplierLocation
+        manufacturerName: manufacturerName
+        materialTypeId: 6
+        storeId: 5
+        unit: unit
+        createdDate: createdDate
+        originId: 5
+        manufacturerLocation: manufacturerLocation
+        id: 0
+        primaryTransportMethod: primaryTransportMethod
+        materialQuantity: 1.4658129805029452
+      properties:
+        id:
+          type: integer
+        materialTypeId:
+          type: integer
+        materialStatus:
+          type: string
+        materialQuantity:
+          type: number
+        unit:
+          type: string
+        createdDate:
+          type: string
+        supplierLocation:
+          type: string
+        manufacturerLocation:
+          type: string
+        supplierName:
+          type: string
+        manufacturerName:
+          type: string
+        primaryTransportMethod:
+          type: string
+        originId:
+          type: integer
+        storeId:
+          type: integer
+      title: MaterialInstance
+      type: object
+    MaterialType:
+      example:
+        subCategory: subCategory
+        itemType: itemType
+        rawMaterial: rawMaterial
+        productCertification: productCertification
+        id: 0
+        category: category
+        endOfLifeAssessment: endOfLifeAssessment
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+        subCategory:
+          type: string
+        itemType:
+          type: string
+        rawMaterial:
+          type: string
+        endOfLifeAssessment:
+          type: string
+        productCertification:
+          type: string
+      title: MaterialType
+      type: object
+    MaterialInstanceHistory:
+      example:
+        snapshotDate: snapshotDate
+        materialStatus: materialStatus
+        materialInstanceId: 6
+        unit: unit
+        createdDate: createdDate
+        originId: 5
+        id: 0
+        materialQuantity: 1.4658129805029452
+      properties:
+        id:
+          type: integer
+        materialInstanceId:
+          type: integer
+        snapshotDate:
+          type: string
+        createdDate:
+          type: string
+        unit:
+          type: string
+        materialQuantity:
+          type: number
+        materialStatus:
+          type: string
+        originId:
+          type: integer
+      title: MaterialInstanceHistory
+      type: object
+    inline_object:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        dateOfBirth:
+          format: date
+          type: string
+      required:
+      - dateOfBirth
+      - email
+      - firstName
+      - lastName
+      type: object
+    inline_response_200:
+      example:
+        materialInstance:
+          materialStatus: materialStatus
+          supplierName: supplierName
+          supplierLocation: supplierLocation
+          manufacturerName: manufacturerName
+          materialTypeId: 6
+          storeId: 5
+          unit: unit
+          createdDate: createdDate
+          originId: 5
+          manufacturerLocation: manufacturerLocation
+          id: 0
+          primaryTransportMethod: primaryTransportMethod
+          materialQuantity: 1.4658129805029452
+        materialInstanceHistory:
+        - snapshotDate: snapshotDate
+          materialStatus: materialStatus
+          materialInstanceId: 6
+          unit: unit
+          createdDate: createdDate
+          originId: 5
+          id: 0
+          materialQuantity: 1.4658129805029452
+        - snapshotDate: snapshotDate
+          materialStatus: materialStatus
+          materialInstanceId: 6
+          unit: unit
+          createdDate: createdDate
+          originId: 5
+          id: 0
+          materialQuantity: 1.4658129805029452
+      properties:
+        materialInstance:
+          $ref: '#/components/schemas/MaterialInstance'
+        materialInstanceHistory:
+          items:
+            $ref: '#/components/schemas/MaterialInstanceHistory'
+          type: array
+      type: object
