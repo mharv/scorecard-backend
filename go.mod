@@ -1,4 +1,4 @@
-module github.com/mharv/scorecard
+module github.com/mharv/scorecard-backend
 
 go 1.17
 
