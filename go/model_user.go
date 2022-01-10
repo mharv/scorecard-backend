@@ -13,12 +13,12 @@ package openapi
 type User struct {
 
 	// Unique identifier for the given user.
-	Id int32 `json:"id"`
+	Id int32 `json:"id" gorm:"column:id"`
 
-	Email string `json:"email"`
+	Email string `json:"email" gorm:"column:email"`
 
 	// The date that the user was created.
-	CreatedDate string `json:"createdDate,omitempty"`
+	CreatedDate string `json:"createdDate" gorm:"column:createdDate"`
 
-	AccessLevel string `json:"accessLevel"`
+	AccessLevel string `json:"accessLevel" gorm:"column:accessLevel"`
 }
