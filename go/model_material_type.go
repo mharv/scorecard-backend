@@ -25,3 +25,7 @@ type MaterialType struct {
 
 	ProductCertification string `json:"productCertification,omitempty" gorm:"column:productCertification"`
 }
+
+func (b *MaterialType) TableName() string {
+	return "materialType"
+}

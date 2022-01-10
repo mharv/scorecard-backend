@@ -62,3 +62,7 @@ type Store struct {
 
 	ReviewRequired int32 `json:"reviewRequired,omitempty" gorm:"column:reviewRequired"`
 }
+
+func (b *Store) TableName() string {
+	return "store"
+}

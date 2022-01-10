@@ -30,3 +30,7 @@ type EpicMaterial struct {
 
 	MoreInformationUrl string `json:"moreInformationUrl,omitempty" gorm:"column:moreInformationUrl"`
 }
+
+func (b *EpicMaterial) TableName() string {
+	return "epicMaterial"
+}

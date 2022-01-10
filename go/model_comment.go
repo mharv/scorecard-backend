@@ -22,3 +22,7 @@ type Comment struct {
 
 	CommentDate string `json:"commentDate,omitempty" gorm:"column:commentDate"`
 }
+
+func (b *Comment) TableName() string {
+	return "comment"
+}

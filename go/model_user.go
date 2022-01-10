@@ -22,3 +22,7 @@ type User struct {
 
 	AccessLevel string `json:"accessLevel" gorm:"column:accessLevel"`
 }
+
+func (b *User) TableName() string {
+	return "user"
+}

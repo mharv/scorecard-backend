@@ -37,3 +37,7 @@ type MaterialInstance struct {
 
 	StoreId int32 `json:"storeId,omitempty" gorm:"column:storeId"`
 }
+
+func (b *MaterialInstance) TableName() string {
+	return "materialInstance"
+}

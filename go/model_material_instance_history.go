@@ -27,3 +27,7 @@ type MaterialInstanceHistory struct {
 
 	OriginId int32 `json:"originId,omitempty" gorm:"column:originId"`
 }
+
+func (b *MaterialInstanceHistory) TableName() string {
+	return "materialInstanceHistory"
+}
