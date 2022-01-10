@@ -20,10 +20,16 @@ import (
 	//
 	//sw "github.com/GIT_USER_ID/GIT_REPO_ID/go"
 	//
+	Config "github.com/mharv/scorecard-backend/db"
 	sw "github.com/mharv/scorecard-backend/go"
 )
 
+var err error
+
 func main() {
+
+	Config.ConnectDatabase()
+
 	log.Printf("Server started")
 
 	router := sw.NewRouter()

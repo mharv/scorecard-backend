@@ -14,24 +14,25 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	Config "github.com/mharv/scorecard-backend/db"
 )
 
-// DeleteCommentsCommentId - 
+// DeleteCommentsCommentId -
 func DeleteCommentsCommentId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// DeleteMaterialTypesMaterialTypeId - 
+// DeleteMaterialTypesMaterialTypeId -
 func DeleteMaterialTypesMaterialTypeId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// DeleteStoresStoreId - 
+// DeleteStoresStoreId -
 func DeleteStoresStoreId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// DeleteUsersUserId - 
+// DeleteUsersUserId -
 func DeleteUsersUserId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
@@ -88,11 +89,10 @@ func GetStoresStoreId(c *gin.Context) {
 
 // GetUsers - Your GET endpoint
 func GetUsers(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"test": []User{
-				{Id: 1, Email: "mitchell.harvey@arup.com", CreatedDate: "test", AccessLevel: "sadnsoadni"},
-				{Id: 2, Email: "mitchell.harvey@arup.com", CreatedDate: "test", AccessLevel: "sadnsoadni"},
-				{Id: 3, Email: "mitchell.harvey@arup.com", CreatedDate: "test", AccessLevel: "sadnsoadni"},
-			}})
+	var users []User
+	Config.DB.Find(&users)
+
+	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
 // GetUsersUserId - Get User Info by User ID
@@ -100,22 +100,22 @@ func GetUsersUserId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PostComment - 
+// PostComment -
 func PostComment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PostMaterialInstance - 
+// PostMaterialInstance -
 func PostMaterialInstance(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PostMaterialType - 
+// PostMaterialType -
 func PostMaterialType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PostStore - 
+// PostStore -
 func PostStore(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
@@ -125,22 +125,22 @@ func PostUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PutMaterialInstancesMaterialInstanceId - 
+// PutMaterialInstancesMaterialInstanceId -
 func PutMaterialInstancesMaterialInstanceId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PutMaterialTypesMaterialTypeId - 
+// PutMaterialTypesMaterialTypeId -
 func PutMaterialTypesMaterialTypeId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PutStoresStoreId - 
+// PutStoresStoreId -
 func PutStoresStoreId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-// PutUsersUserId - 
+// PutUsersUserId -
 func PutUsersUserId(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }

@@ -1,45 +1,46 @@
-package db
+package Config
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
+
+	"gorm.io/driver/mysql"
 )
 
-var db *sql.DB
+var DB *gorm.DB
 
 // get from .env file
 var server = goDotEnvVariable("MYSQLSERVER")
 var port = goDotEnvVariable("MYSQLPORT")
-var user = goDotEnvVariable("MYSQLUSER")
+var username = goDotEnvVariable("MYSQLUSER")
 var password = goDotEnvVariable("MYSQLPASSWORD")
 var database = goDotEnvVariable("MYSQLDATABASE")
 
-func ReturnServer() string {
-	return server
+func DbURL() string {
+	return fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		username,
+		password,
+		server,
+		port,
+		database,
+	)
 }
 
-func ConnectToDb() {
-	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;",
-		server, user, password, port, database)
+func ConnectDatabase() {
+	database, err := gorm.Open(mysql.Open(DbURL()), &gorm.Config{})
 
-	var err error
+	if err != nil {
+		panic("Failed to connect to database!")
+	}
 
-	// Create connection pool
-	db, err = sql.Open("sqlserver", connString)
-	if err != nil {
-		log.Fatal("Error creating connection pool: ", err.Error())
-	}
-	ctx := context.Background()
-	err = db.PingContext(ctx)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	fmt.Printf("Connected!\n")
+	// database.AutoMigrate(&Book{})
+
+	DB = database
 }
 
 // use godot package to load/read the .env file and
