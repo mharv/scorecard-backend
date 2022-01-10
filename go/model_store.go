@@ -12,54 +12,53 @@ package openapi
 
 // Store - Store metadata for each individual Aesop store
 type Store struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	StoreName string `json:"storeName,omitempty" gorm:"column:storeName"`
 
-	StoreName string `json:"storeName,omitempty"`
+	Country string `json:"country,omitempty" gorm:"column:country"`
 
-	Country string `json:"country,omitempty"`
+	ScorecardType string `json:"scorecardType,omitempty" gorm:"column:scorecardType"`
 
-	ScorecardType string `json:"scorecardType,omitempty"`
+	LocationType string `json:"locationType,omitempty" gorm:"column:locationType"`
 
-	LocationType string `json:"locationType,omitempty"`
+	RoicCapex string `json:"roicCapex,omitempty" gorm:"column:roicCapex"`
 
-	RoicCapex string `json:"roicCapex,omitempty"`
+	Currency string `json:"currency,omitempty" gorm:"column:currency"`
 
-	Currency string `json:"currency,omitempty"`
+	LeaseTermInYears float32 `json:"leaseTermInYears,omitempty" gorm:"column:leaseTermInYears"`
 
-	LeaseTermInYears float32 `json:"leaseTermInYears,omitempty"`
+	ProjectManagerId int32 `json:"projectManagerId,omitempty" gorm:"column:projectManagerId"`
 
-	ProjectManagerId int32 `json:"projectManagerId,omitempty"`
+	ArchitectId int32 `json:"architectId,omitempty" gorm:"column:architectId"`
 
-	ArchitectId int32 `json:"architectId,omitempty"`
+	ContractorId int32 `json:"contractorId,omitempty" gorm:"column:contractorId"`
 
-	ContractorId int32 `json:"contractorId,omitempty"`
+	SignedCoc bool `json:"signedCoc,omitempty" gorm:"column:signedCoc"`
 
-	SignedCoc bool `json:"signedCoc,omitempty"`
+	SignedNda bool `json:"signedNda,omitempty" gorm:"column:signedNda"`
 
-	SignedNda bool `json:"signedNda,omitempty"`
+	TotalSqm float32 `json:"totalSqm,omitempty" gorm:"column:totalSqm"`
 
-	TotalSqm float32 `json:"totalSqm,omitempty"`
+	RetailSqm float32 `json:"retailSqm,omitempty" gorm:"column:retailSqm"`
 
-	RetailSqm float32 `json:"retailSqm,omitempty"`
+	BohSqm float32 `json:"bohSqm,omitempty" gorm:"column:bohSqm"`
 
-	BohSqm float32 `json:"bohSqm,omitempty"`
+	MarketingMediaType string `json:"marketingMediaType,omitempty" gorm:"column:marketingMediaType"`
 
-	MarketingMediaType string `json:"marketingMediaType,omitempty"`
+	PosSqm float32 `json:"posSqm,omitempty" gorm:"column:posSqm"`
 
-	PosSqm float32 `json:"posSqm,omitempty"`
+	MposSqm float32 `json:"mposSqm,omitempty" gorm:"column:mposSqm"`
 
-	MposSqm float32 `json:"mposSqm,omitempty"`
+	TapNumber int32 `json:"tapNumber,omitempty" gorm:"column:tapNumber"`
 
-	TapNumber int32 `json:"tapNumber,omitempty"`
+	TreatmentSpace bool `json:"treatmentSpace,omitempty" gorm:"column:treatmentSpace"`
 
-	TreatmentSpace bool `json:"treatmentSpace,omitempty"`
+	Bathroom bool `json:"bathroom,omitempty" gorm:"column:bathroom"`
 
-	Bathroom bool `json:"bathroom,omitempty"`
+	OtherSpace string `json:"otherSpace,omitempty" gorm:"column:otherSpace"`
 
-	OtherSpace string `json:"otherSpace,omitempty"`
+	ReviewerId int32 `json:"reviewerId,omitempty" gorm:"column:reviewerId"`
 
-	ReviewerId int32 `json:"reviewerId,omitempty"`
-
-	ReviewRequired int32 `json:"reviewRequired,omitempty"`
+	ReviewRequired int32 `json:"reviewRequired,omitempty" gorm:"column:reviewRequired"`
 }

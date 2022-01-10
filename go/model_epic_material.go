@@ -12,22 +12,21 @@ package openapi
 
 // EpicMaterial - Material metadata
 type EpicMaterial struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	Category string `json:"category,omitempty" gorm:"column:category"`
 
-	Category string `json:"category,omitempty"`
+	Type string `json:"type,omitempty" gorm:"column:type"`
 
-	Type string `json:"type,omitempty"`
+	Material string `json:"material,omitempty" gorm:"column:material"`
 
-	Material string `json:"material,omitempty"`
+	FunctionalUnit string `json:"functionalUnit,omitempty" gorm:"column:functionalUnit"`
 
-	FunctionalUnit string `json:"functionalUnit,omitempty"`
+	EmbodiedEnergy float32 `json:"embodiedEnergy,omitempty" gorm:"column:embodiedEnergy"`
 
-	EmbodiedEnergy float32 `json:"embodiedEnergy,omitempty"`
+	EmbodiedWater float32 `json:"embodiedWater,omitempty" gorm:"column:embodiedWater"`
 
-	EmbodiedWater float32 `json:"embodiedWater,omitempty"`
+	EmbodiedGHGE float32 `json:"embodiedGHGE,omitempty" gorm:"column:embodiedGHGE"`
 
-	EmbodiedGHGE float32 `json:"embodiedGHGE,omitempty"`
-
-	MoreInformationUrl string `json:"moreInformationUrl,omitempty"`
+	MoreInformationUrl string `json:"moreInformationUrl,omitempty" gorm:"column:moreInformationUrl"`
 }

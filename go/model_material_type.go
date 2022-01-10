@@ -11,18 +11,17 @@
 package openapi
 
 type MaterialType struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	Category string `json:"category,omitempty" gorm:"column:category"`
 
-	Category string `json:"category,omitempty"`
+	SubCategory string `json:"subCategory,omitempty" gorm:"column:subCategory"`
 
-	SubCategory string `json:"subCategory,omitempty"`
+	ItemType string `json:"itemType,omitempty" gorm:"column:itemType"`
 
-	ItemType string `json:"itemType,omitempty"`
+	RawMaterial string `json:"rawMaterial,omitempty" gorm:"column:rawMaterial"`
 
-	RawMaterial string `json:"rawMaterial,omitempty"`
+	EndOfLifeAssessment string `json:"endOfLifeAssessment,omitempty" gorm:"column:endOfLifeAssessment"`
 
-	EndOfLifeAssessment string `json:"endOfLifeAssessment,omitempty"`
-
-	ProductCertification string `json:"productCertification,omitempty"`
+	ProductCertification string `json:"productCertification,omitempty" gorm:"column:productCertification"`
 }

@@ -12,14 +12,13 @@ package openapi
 
 // Comment - comments that are made on materials during review
 type Comment struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	Content string `json:"content,omitempty" gorm:"column:content"`
 
-	Content string `json:"content,omitempty"`
+	MaterialInstanceId int32 `json:"materialInstanceId,omitempty" gorm:"column:materialInstanceId"`
 
-	MaterialInstanceId int32 `json:"materialInstanceId,omitempty"`
+	ReviewerId int32 `json:"reviewerId,omitempty" gorm:"column:reviewerId"`
 
-	ReviewerId int32 `json:"reviewerId,omitempty"`
-
-	CommentDate string `json:"commentDate,omitempty"`
+	CommentDate string `json:"commentDate,omitempty" gorm:"column:commentDate"`
 }

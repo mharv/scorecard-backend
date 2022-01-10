@@ -11,30 +11,29 @@
 package openapi
 
 type MaterialInstance struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	MaterialTypeId int32 `json:"materialTypeId,omitempty" gorm:"column:materialTypeId"`
 
-	MaterialTypeId int32 `json:"materialTypeId,omitempty"`
+	MaterialStatus string `json:"materialStatus,omitempty" gorm:"column:materialStatus"`
 
-	MaterialStatus string `json:"materialStatus,omitempty"`
+	MaterialQuantity float32 `json:"materialQuantity,omitempty" gorm:"column:materialQuantity"`
 
-	MaterialQuantity float32 `json:"materialQuantity,omitempty"`
+	Unit string `json:"unit,omitempty" gorm:"column:unit"`
 
-	Unit string `json:"unit,omitempty"`
+	CreatedDate string `json:"createdDate,omitempty" gorm:"column:createdDate"`
 
-	CreatedDate string `json:"createdDate,omitempty"`
+	SupplierLocation string `json:"supplierLocation,omitempty" gorm:"column:supplierLocation"`
 
-	SupplierLocation string `json:"supplierLocation,omitempty"`
+	ManufacturerLocation string `json:"manufacturerLocation,omitempty" gorm:"column:manufacturerLocation"`
 
-	ManufacturerLocation string `json:"manufacturerLocation,omitempty"`
+	SupplierName string `json:"supplierName,omitempty" gorm:"column:supplierName"`
 
-	SupplierName string `json:"supplierName,omitempty"`
+	ManufacturerName string `json:"manufacturerName,omitempty" gorm:"column:manufacturerName"`
 
-	ManufacturerName string `json:"manufacturerName,omitempty"`
+	PrimaryTransportMethod string `json:"primaryTransportMethod,omitempty" gorm:"column:primaryTransportMethod"`
 
-	PrimaryTransportMethod string `json:"primaryTransportMethod,omitempty"`
+	OriginId int32 `json:"originId,omitempty" gorm:"column:originId"`
 
-	OriginId int32 `json:"originId,omitempty"`
-
-	StoreId int32 `json:"storeId,omitempty"`
+	StoreId int32 `json:"storeId,omitempty" gorm:"column:storeId"`
 }

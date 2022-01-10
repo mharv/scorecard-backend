@@ -11,20 +11,19 @@
 package openapi
 
 type MaterialInstanceHistory struct {
+	Id int32 `json:"id,omitempty" gorm:"column:id"`
 
-	Id int32 `json:"id,omitempty"`
+	MaterialInstanceId int32 `json:"materialInstanceId,omitempty" gorm:"column:materialInstanceId"`
 
-	MaterialInstanceId int32 `json:"materialInstanceId,omitempty"`
+	SnapshotDate string `json:"snapshotDate,omitempty" gorm:"column:snapshotDate"`
 
-	SnapshotDate string `json:"snapshotDate,omitempty"`
+	CreatedDate string `json:"createdDate,omitempty" gorm:"column:createdDate"`
 
-	CreatedDate string `json:"createdDate,omitempty"`
+	Unit string `json:"unit,omitempty" gorm:"column:unit"`
 
-	Unit string `json:"unit,omitempty"`
+	MaterialQuantity float32 `json:"materialQuantity,omitempty" gorm:"column:materialQuantity"`
 
-	MaterialQuantity float32 `json:"materialQuantity,omitempty"`
+	MaterialStatus string `json:"materialStatus,omitempty" gorm:"column:materialStatus"`
 
-	MaterialStatus string `json:"materialStatus,omitempty"`
-
-	OriginId int32 `json:"originId,omitempty"`
+	OriginId int32 `json:"originId,omitempty" gorm:"column:originId"`
 }
