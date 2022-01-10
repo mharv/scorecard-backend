@@ -17,5 +17,6 @@ RUN go build .
 FROM scratch AS runtime
 ENV GIN_MODE=release
 COPY --from=build /go/src/scorecard-backend ./
+COPY --from=build /go/src/.env ./
 EXPOSE 8080
 ENTRYPOINT ["./scorecard-backend"]
