@@ -39,7 +39,14 @@ func DeleteUsersUserId(c *gin.Context) {
 
 // GetCommentsMaterialInstanceId - Your GET endpoint
 func GetCommentsMaterialInstanceId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialInstanceId")
+	var allMaterialComments []Comment
+
+	if result := Config.DB.Where("materialInstanceId = ?", id).Find(&allMaterialComments); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, allMaterialComments)
+	}
 }
 
 // GetEpicMaterials - Your GET endpoint
