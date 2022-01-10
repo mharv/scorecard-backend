@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 
 	"gorm.io/driver/mysql"
 )
@@ -32,7 +33,11 @@ func DbURL() string {
 }
 
 func ConnectDatabase() {
-	database, err := gorm.Open(mysql.Open(DbURL()), &gorm.Config{})
+	database, err := gorm.Open(mysql.Open(DbURL()), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 
 	if err != nil {
 		panic("Failed to connect to database!")
