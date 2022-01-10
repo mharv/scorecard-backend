@@ -81,7 +81,14 @@ func GetMaterialTypes(c *gin.Context) {
 
 // GetMaterialTypesMaterialTypeId - Your GET endpoint
 func GetMaterialTypesMaterialTypeId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialTypeId")
+	var materialType MaterialType
+
+	if result := Config.DB.Where("id = ?", id).First(&materialType); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialType)
+	}
 }
 
 // GetStores - Your GET endpoint
