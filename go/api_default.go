@@ -94,9 +94,12 @@ func GetStoresStoreId(c *gin.Context) {
 // GetUsers - Your GET endpoint
 func GetUsers(c *gin.Context) {
 	var users []User
-	Config.DB.Table("user").Find(&users)
 
-	c.JSON(http.StatusOK, gin.H{"data": users})
+	if result := Config.DB.Find(&users); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, users)
+	}
 }
 
 // GetUsersUserId - Get User Info by User ID
