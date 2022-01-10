@@ -45,9 +45,12 @@ func GetCommentsMaterialInstanceId(c *gin.Context) {
 // GetEpicMaterials - Your GET endpoint
 func GetEpicMaterials(c *gin.Context) {
 	var epicMaterials []EpicMaterial
-	Config.DB.Find(&epicMaterials)
 
-	c.JSON(http.StatusOK, gin.H{"data": epicMaterials})
+	if result := Config.DB.Find(&epicMaterials); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, epicMaterials)
+	}
 }
 
 // GetEpicMaterialsEpicMaterialId - Your GET endpoint
@@ -68,9 +71,12 @@ func GetMaterialInstancesStoreId(c *gin.Context) {
 // GetMaterialTypes - Your GET endpoint
 func GetMaterialTypes(c *gin.Context) {
 	var materialTypes []MaterialType
-	Config.DB.Find(&materialTypes)
 
-	c.JSON(http.StatusOK, gin.H{"data": materialTypes})
+	if result := Config.DB.Find(&materialTypes); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialTypes)
+	}
 }
 
 // GetMaterialTypesMaterialTypeId - Your GET endpoint
@@ -81,9 +87,12 @@ func GetMaterialTypesMaterialTypeId(c *gin.Context) {
 // GetStores - Your GET endpoint
 func GetStores(c *gin.Context) {
 	var stores []Store
-	Config.DB.Find(&stores)
 
-	c.JSON(http.StatusOK, gin.H{"data": stores})
+	if result := Config.DB.Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, stores)
+	}
 }
 
 // GetStoresStoreId - Your GET endpoint
