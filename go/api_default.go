@@ -45,7 +45,7 @@ func GetCommentsMaterialInstanceId(c *gin.Context) {
 // GetEpicMaterials - Your GET endpoint
 func GetEpicMaterials(c *gin.Context) {
 	var epicMaterials []EpicMaterial
-	Config.DB.Table("epicmaterial").Find(&epicMaterials)
+	Config.DB.Find(&epicMaterials)
 
 	c.JSON(http.StatusOK, gin.H{"data": epicMaterials})
 }
@@ -68,7 +68,7 @@ func GetMaterialInstancesStoreId(c *gin.Context) {
 // GetMaterialTypes - Your GET endpoint
 func GetMaterialTypes(c *gin.Context) {
 	var materialTypes []MaterialType
-	Config.DB.Table("materialType").Find(&materialTypes)
+	Config.DB.Find(&materialTypes)
 
 	c.JSON(http.StatusOK, gin.H{"data": materialTypes})
 }
@@ -81,7 +81,7 @@ func GetMaterialTypesMaterialTypeId(c *gin.Context) {
 // GetStores - Your GET endpoint
 func GetStores(c *gin.Context) {
 	var stores []Store
-	Config.DB.Table("store").Find(&stores)
+	Config.DB.Find(&stores)
 
 	c.JSON(http.StatusOK, gin.H{"data": stores})
 }
