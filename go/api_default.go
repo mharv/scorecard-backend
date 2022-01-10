@@ -113,7 +113,14 @@ func GetUsers(c *gin.Context) {
 
 // GetUsersUserId - Get User Info by User ID
 func GetUsersUserId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("userId")
+	var user User
+
+	if result := Config.DB.Where("id = ?", id).First(&user); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, user)
+	}
 }
 
 // PostComment -
