@@ -19,11 +19,11 @@ import (
 // Route is the information for every URI.
 type Route struct {
 	// Name is the name of this Route.
-	Name        string
+	Name string
 	// Method is the string for the HTTP method. ex) GET, POST etc..
-	Method      string
+	Method string
 	// Pattern is the pattern of the URI.
-	Pattern     string
+	Pattern string
 	// HandlerFunc is the handler function of this route.
 	HandlerFunc gin.HandlerFunc
 }
@@ -54,7 +54,7 @@ func NewRouter() *gin.Engine {
 
 // Index is the index handler.
 func Index(c *gin.Context) {
-	c.String(http.StatusOK, "Hello World!")
+	c.String(http.StatusOK, "Hello World! this is a test")
 }
 
 var routes = Routes{
