@@ -14,6 +14,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	db "github.com/mharv/scorecard-backend/db"
 )
 
 // Route is the information for every URI.
@@ -54,7 +55,7 @@ func NewRouter() *gin.Engine {
 
 // Index is the index handler.
 func Index(c *gin.Context) {
-	c.String(http.StatusOK, "Hello World! this is a test")
+	c.String(http.StatusOK, db.ReturnServer())
 }
 
 var routes = Routes{

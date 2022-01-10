@@ -19,6 +19,10 @@ var user = goDotEnvVariable("MYSQLUSER")
 var password = goDotEnvVariable("MYSQLPASSWORD")
 var database = goDotEnvVariable("MYSQLDATABASE")
 
+func ReturnServer() string {
+	return server
+}
+
 func ConnectToDb() {
 	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;",
 		server, user, password, port, database)
