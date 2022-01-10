@@ -62,17 +62,48 @@ func GetEpicMaterials(c *gin.Context) {
 
 // GetEpicMaterialsEpicMaterialId - Your GET endpoint
 func GetEpicMaterialsEpicMaterialId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialTypeId")
+	var epicMaterial EpicMaterial
+
+	if result := Config.DB.Where("id = ?", id).First(&epicMaterial); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, epicMaterial)
+	}
 }
 
 // GetMaterialInstanceHistoryMaterialInstanceId - Your GET endpoint
 func GetMaterialInstanceHistoryMaterialInstanceId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialInstanceId")
+	var materialInstance MaterialInstance
+	var materialInstanceHistory []MaterialInstanceHistory
+
+	type MaterialInstanceHistoryResponse struct {
+		instance MaterialInstance
+		history  []MaterialInstanceHistory
+	}
+
+	if result := Config.DB.Where("id = ?", id).Find(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		if result := Config.DB.Where("materialInstanceId = ?", id).Find(&materialInstanceHistory); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, MaterialInstanceHistoryResponse{materialInstance, materialInstanceHistory})
+		}
+	}
 }
 
 // GetMaterialInstancesStoreId - Your GET endpoint
 func GetMaterialInstancesStoreId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("storeId")
+	var materialInstances []MaterialInstance
+
+	if result := Config.DB.Where("storeId = ?", id).Find(&materialInstances); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialInstances)
+	}
 }
 
 // GetMaterialTypes - Your GET endpoint
