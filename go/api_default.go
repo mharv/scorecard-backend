@@ -242,17 +242,53 @@ func PostUser(c *gin.Context) {
 
 // PutMaterialInstancesMaterialInstanceId -
 func PutMaterialInstancesMaterialInstanceId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialInstanceId")
+	var materialInstance MaterialInstance
+
+	if result := Config.DB.Where("id = ?", id).First(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.BindJSON(&materialInstance)
+		if result := Config.DB.Save(&materialInstance); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, materialInstance)
+		}
+	}
 }
 
 // PutMaterialTypesMaterialTypeId -
 func PutMaterialTypesMaterialTypeId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("materialTypeId")
+	var materialType MaterialType
+
+	if result := Config.DB.Where("id = ?", id).First(&materialType); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.BindJSON(&materialType)
+		if result := Config.DB.Save(&materialType); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, materialType)
+		}
+	}
 }
 
 // PutStoresStoreId -
 func PutStoresStoreId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Params.ByName("storeId")
+	var store Store
+
+	if result := Config.DB.Where("id = ?", id).First(&store); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.BindJSON(&store)
+		if result := Config.DB.Save(&store); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, store)
+		}
+	}
 }
 
 // PutUsersUserId -
