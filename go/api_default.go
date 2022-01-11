@@ -178,22 +178,52 @@ func GetUsersUserId(c *gin.Context) {
 
 // PostComment -
 func PostComment(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var comment Comment
+	c.BindJSON(&comment)
+
+	comment.CommentDate = time.Now().UTC().Format("2006-01-02T15:04:05Z")
+
+	if result := Config.DB.Create(&comment); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, comment)
+	}
 }
 
 // PostMaterialInstance -
 func PostMaterialInstance(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var materialInstance MaterialInstance
+	c.BindJSON(&materialInstance)
+
+	if result := Config.DB.Create(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialInstance)
+	}
 }
 
 // PostMaterialType -
 func PostMaterialType(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var materialType MaterialType
+	c.BindJSON(&materialType)
+
+	if result := Config.DB.Create(&materialType); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialType)
+	}
 }
 
 // PostStore -
 func PostStore(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var store Store
+	c.BindJSON(&store)
+
+	if result := Config.DB.Create(&store); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, store)
+	}
 }
 
 // PostUser - Create New User
