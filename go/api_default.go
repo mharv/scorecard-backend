@@ -12,6 +12,7 @@ package openapi
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	Config "github.com/mharv/scorecard-backend/db"
@@ -197,7 +198,16 @@ func PostStore(c *gin.Context) {
 
 // PostUser - Create New User
 func PostUser(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var user User
+	c.BindJSON(&user)
+
+	user.CreatedDate = time.Now().UTC().Format("2006-01-02T15:04:05Z")
+
+	if result := Config.DB.Create(&user); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, user)
+	}
 }
 
 // PutMaterialInstancesMaterialInstanceId -
