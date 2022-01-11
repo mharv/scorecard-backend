@@ -20,22 +20,46 @@ import (
 
 // DeleteCommentsCommentId -
 func DeleteCommentsCommentId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var comment Comment
+	id := c.Params.ByName("commentId")
+	if result := Config.DB.Where("id = ?", id).Delete(&comment); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"commentId " + id: "is deleted"})
+	}
 }
 
 // DeleteMaterialTypesMaterialTypeId -
 func DeleteMaterialTypesMaterialTypeId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var materialType MaterialType
+	id := c.Params.ByName("materialTypeId")
+	if result := Config.DB.Where("id = ?", id).Delete(&materialType); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"materialTypeId " + id: "is deleted"})
+	}
 }
 
 // DeleteStoresStoreId -
 func DeleteStoresStoreId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var store Store
+	id := c.Params.ByName("userId")
+	if result := Config.DB.Where("id = ?", id).Delete(&store); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"storeId " + id: "is deleted"})
+	}
 }
 
 // DeleteUsersUserId -
 func DeleteUsersUserId(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	var user User
+	id := c.Params.ByName("userId")
+	if result := Config.DB.Where("id = ?", id).Delete(&user); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, gin.H{"userId " + id: "is deleted"})
+	}
 }
 
 // GetCommentsMaterialInstanceId - Your GET endpoint
