@@ -32,7 +32,7 @@ type Store struct {
 
 	ArchitectId int32 `json:"architectId,omitempty" gorm:"column:architectId"`
 
-	ContractorId int32 `json:"contractorId,omitempty" gorm:"column:contractorId"`
+	ContractorId string `json:"contractorId,omitempty" gorm:"column:contractorId"`
 
 	SignedCoc bool `json:"signedCoc,omitempty" gorm:"column:signedCoc"`
 
