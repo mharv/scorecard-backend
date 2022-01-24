@@ -77,6 +77,8 @@ type Store struct {
 	SusInitVentilation bool `json:"susInitVentilation,omitempty" gorm:"column:susInitVentilation"`
 
 	SusInitComposting bool `json:"susInitComposting,omitempty" gorm:"column:susInitComposting"`
+
+	StoreStatus string `json:"storeStatus,omitempty" gorm:"column:storeStatus"`
 }
 
 func (b *Store) TableName() string {
