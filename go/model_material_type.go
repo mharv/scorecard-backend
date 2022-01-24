@@ -19,8 +19,6 @@ type MaterialType struct {
 
 	ItemType string `json:"itemType,omitempty" gorm:"column:itemType"`
 
-	RawMaterial string `json:"rawMaterial,omitempty" gorm:"column:rawMaterial"`
-
 	EndOfLifeAssessment string `json:"endOfLifeAssessment,omitempty" gorm:"column:endOfLifeAssessment"`
 
 	ProductCertification string `json:"productCertification,omitempty" gorm:"column:productCertification"`
