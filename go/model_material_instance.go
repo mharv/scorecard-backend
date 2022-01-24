@@ -38,6 +38,8 @@ type MaterialInstance struct {
 	StoreId int32 `json:"storeId,omitempty" gorm:"column:storeId"`
 
 	RawMaterial string `json:"rawMaterial,omitempty" gorm:"column:rawMaterial"`
+
+	Circularity string `json:"circularity,omitempty" gorm:"column:circularity"`
 }
 
 func (b *MaterialInstance) TableName() string {
