@@ -46,9 +46,9 @@ type Store struct {
 
 	MarketingMediaType string `json:"marketingMediaType,omitempty" gorm:"column:marketingMediaType"`
 
-	PosSqm float32 `json:"posSqm,omitempty" gorm:"column:posSqm"`
+	Pos float32 `json:"pos,omitempty" gorm:"column:pos"`
 
-	MposSqm float32 `json:"mposSqm,omitempty" gorm:"column:mposSqm"`
+	Mpos float32 `json:"mpos,omitempty" gorm:"column:mpos"`
 
 	TapNumber int32 `json:"tapNumber,omitempty" gorm:"column:tapNumber"`
 
