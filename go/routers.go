@@ -108,10 +108,24 @@ var routes = Routes{
 	},
 
 	{
+		"GetCertifications",
+		http.MethodGet,
+		"/certifications",
+		GetCertifications,
+	},
+
+	{
 		"GetEpicMaterialsEpicMaterialId",
 		http.MethodGet,
 		"/epicMaterials/:epicMaterialId",
 		GetEpicMaterialsEpicMaterialId,
+	},
+
+	{
+		"GetStoresArchitectId",
+		http.MethodGet,
+		"/storesByArchitect/:architectId",
+		GetStoresArchitectId,
 	},
 
 	{

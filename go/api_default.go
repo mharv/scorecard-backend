@@ -85,6 +85,16 @@ func GetEpicMaterials(c *gin.Context) {
 	}
 }
 
+func GetCertifications(c *gin.Context) {
+	var certifications []Certification
+
+	if result := Config.DB.Find(&certifications); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, certifications)
+	}
+}
+
 // GetEpicMaterialsEpicMaterialId - Your GET endpoint
 func GetEpicMaterialsEpicMaterialId(c *gin.Context) {
 	id := c.Params.ByName("materialTypeId")
@@ -116,6 +126,17 @@ func GetMaterialInstanceHistoryMaterialInstanceId(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusOK, MaterialInstanceHistoryResponse{materialInstance, materialInstanceHistory})
 		}
+	}
+}
+
+func GetStoresArchitectId(c *gin.Context) {
+	id := c.Params.ByName("architectId")
+	var stores []Store
+
+	if result := Config.DB.Where("architectId = ?", id).Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, stores)
 	}
 }
 
