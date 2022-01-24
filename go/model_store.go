@@ -61,6 +61,22 @@ type Store struct {
 	ReviewerId int32 `json:"reviewerId,omitempty" gorm:"column:reviewerId"`
 
 	ReviewRequired int32 `json:"reviewRequired,omitempty" gorm:"column:reviewRequired"`
+
+	Region string `json:"region,omitempty" gorm:"column:region"`
+
+	SusInitGreenspace bool `json:"susInitGreenspace,omitempty" gorm:"column:susInitGreenspace"`
+
+	SusInitRainwater bool `json:"susInitRainwater,omitempty" gorm:"column:susInitRainwater"`
+
+	SusInitSolarPV bool `json:"susInitSolarPV,omitempty" gorm:"column:susInitSolarPV"`
+
+	SusInitGreywater bool `json:"susInitGreywater,omitempty" gorm:"column:susInitGreywater"`
+
+	SusInitBattery bool `json:"susInitBattery,omitempty" gorm:"column:susInitBattery"`
+
+	SusInitVentilation bool `json:"susInitVentilation,omitempty" gorm:"column:susInitVentilation"`
+
+	SusInitComposting bool `json:"susInitComposting,omitempty" gorm:"column:susInitComposting"`
 }
 
 func (b *Store) TableName() string {
