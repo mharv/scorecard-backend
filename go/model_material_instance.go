@@ -31,8 +31,6 @@ type MaterialInstance struct {
 
 	ManufacturerName string `json:"manufacturerName,omitempty" gorm:"column:manufacturerName"`
 
-	PrimaryTransportMethod string `json:"primaryTransportMethod,omitempty" gorm:"column:primaryTransportMethod"`
-
 	OriginId int32 `json:"originId,omitempty" gorm:"column:originId"`
 
 	StoreId int32 `json:"storeId,omitempty" gorm:"column:storeId"`
@@ -48,6 +46,14 @@ type MaterialInstance struct {
 	ItemType string `json:"itemType,omitempty" gorm:"column:itemType"`
 
 	ProductCertification string `json:"productCertification,omitempty" gorm:"column:productCertification"`
+
+	RoadTransportKms float32 `json:"roadTransportKms,omitempty" gorm:"column:roadTransportKms"`
+
+	RailTransportKms float32 `json:"railTransportKms,omitempty" gorm:"column:railTransportKms"`
+
+	AirTransportKms float32 `json:"airTransportKms,omitempty" gorm:"column:airTransportKms"`
+
+	OceanTransportKms float32 `json:"oceanTransportKms,omitempty" gorm:"column:oceanTransportKms"`
 }
 
 func (b *MaterialInstance) TableName() string {
