@@ -81,6 +81,8 @@ type Store struct {
 	StoreStatus string `json:"storeStatus,omitempty" gorm:"column:storeStatus"`
 
 	CreatorId int32 `json:"creatorId,omitempty" gorm:"column:creatorId"`
+
+	ReviewComment string `json:"reviewComment,omitempty" gorm:"column:reviewComment"`
 }
 
 func (b *Store) TableName() string {
