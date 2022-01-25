@@ -58,6 +58,16 @@ type MaterialInstance struct {
 	MaterialDescription string `json:"materialDescription,omitempty" gorm:"column:materialDescription"`
 
 	CircularityAssessment string `json:"circularityAssessment,omitempty" gorm:"column:circularityAssessment"`
+
+	ManufacturerLocationScore float32 `json:"manufacturerLocationScore,omitempty" gorm:"column:manufacturerLocationScore"`
+
+	RawMaterialScore float32 `json:"rawMaterialScore,omitempty" gorm:"column:rawMaterialScore"`
+
+	EndOfLifeAssessmentScore float32 `json:"endOfLifeAssessmentScore,omitempty" gorm:"column:endOfLifeAssessmentScore"`
+
+	ProductCertificationScore float32 `json:"productCertificationScore,omitempty" gorm:"column:productCertificationScore"`
+
+	TotalScore float32 `json:"totalScore,omitempty" gorm:"column:totalScore"`
 }
 
 func (b *MaterialInstance) TableName() string {
