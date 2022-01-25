@@ -79,6 +79,8 @@ type Store struct {
 	SusInitComposting bool `json:"susInitComposting,omitempty" gorm:"column:susInitComposting"`
 
 	StoreStatus string `json:"storeStatus,omitempty" gorm:"column:storeStatus"`
+
+	CreatorId int32 `json:"creatorId,omitempty" gorm:"column:creatorId"`
 }
 
 func (b *Store) TableName() string {
