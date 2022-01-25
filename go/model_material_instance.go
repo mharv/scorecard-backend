@@ -56,6 +56,8 @@ type MaterialInstance struct {
 	OceanTransportKms float32 `json:"oceanTransportKms,omitempty" gorm:"column:oceanTransportKms"`
 
 	MaterialDescription string `json:"materialDescription,omitempty" gorm:"column:materialDescription"`
+
+	CircularityAssessment string `json:"circularityAssessment,omitempty" gorm:"column:circularityAssessment"`
 }
 
 func (b *MaterialInstance) TableName() string {
