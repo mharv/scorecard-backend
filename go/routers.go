@@ -122,13 +122,6 @@ var routes = Routes{
 	},
 
 	{
-		"GetStoresArchitectId",
-		http.MethodGet,
-		"/storesByArchitect/:architectId",
-		GetStoresArchitectId,
-	},
-
-	{
 		"GetMaterialInstanceHistoryMaterialInstanceId",
 		http.MethodGet,
 		"/materialInstanceHistory/:materialInstanceId",
@@ -154,6 +147,20 @@ var routes = Routes{
 		http.MethodGet,
 		"/materialTypes/:materialTypeId",
 		GetMaterialTypesMaterialTypeId,
+	},
+
+	{
+		"GetStoresArchitectId",
+		http.MethodGet,
+		"/storesByArchitect/:architectId",
+		GetStoresArchitectId,
+	},
+
+	{
+		"GetStoresContractorId",
+		http.MethodGet,
+		"/storesByContractor/:contractorId",
+		GetStoresContractorId,
 	},
 
 	{

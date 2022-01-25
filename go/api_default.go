@@ -140,6 +140,17 @@ func GetStoresArchitectId(c *gin.Context) {
 	}
 }
 
+func GetStoresContractorId(c *gin.Context) {
+	id := c.Params.ByName("contractorId")
+	var stores []Store
+
+	if result := Config.DB.Where("contractorId = ?", id).Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, stores)
+	}
+}
+
 // GetMaterialInstancesStoreId - Your GET endpoint
 func GetMaterialInstancesStoreId(c *gin.Context) {
 	id := c.Params.ByName("storeId")
