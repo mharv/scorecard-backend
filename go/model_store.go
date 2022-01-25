@@ -83,6 +83,8 @@ type Store struct {
 	CreatorId int32 `json:"creatorId,omitempty" gorm:"column:creatorId"`
 
 	ReviewComment string `json:"reviewComment,omitempty" gorm:"column:reviewComment"`
+
+	CircularityAssessment string `json:"circularityAssessment,omitempty" gorm:"column:circularityAssessment"`
 }
 
 func (b *Store) TableName() string {
