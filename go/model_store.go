@@ -83,6 +83,36 @@ type Store struct {
 	CreatorId int32 `json:"creatorId,omitempty" gorm:"column:creatorId"`
 
 	ReviewComment string `json:"reviewComment,omitempty" gorm:"column:reviewComment"`
+
+	CatCSFScore float32 `json:"catCSFScore,omitempty" gorm:"column:catCSFScore"`
+
+	CatMUScore float32 `json:"catMUScore,omitempty" gorm:"column:catMUScore"`
+
+	CatFFScore float32 `json:"catFFScore,omitempty" gorm:"column:catFFScore"`
+
+	SubCatFlooringScore float32 `json:"subCatFlooringScore,omitempty" gorm:"column:subCatFlooringScore"`
+
+	SubCatWallScore float32 `json:"subCatWallScore,omitempty" gorm:"column:subCatWallScore"`
+
+	SubCatCeilingScore float32 `json:"subCatCeilingScore,omitempty" gorm:"column:subCatCeilingScore"`
+
+	SubCatFacadeScore float32 `json:"subCatFacadeScore,omitempty" gorm:"column:subCatFacadeScore"`
+
+	SubCatPOSScore float32 `json:"subCatPOSScore,omitempty" gorm:"column:subCatPOSScore"`
+
+	SubCatProdShelvingScore float32 `json:"subCatProdShelvingScore,omitempty" gorm:"column:subCatProdShelvingScore"`
+
+	SubCatBOHScore float32 `json:"subCatBOHScore,omitempty" gorm:"column:subCatBOHScore"`
+
+	SubCatBasinScore float32 `json:"subCatBasinScore,omitempty" gorm:"column:subCatBasinScore"`
+
+	SubCatFurnitureScore float32 `json:"subCatFurnitureScore,omitempty" gorm:"column:subCatFurnitureScore"`
+
+	SubCatLightingScore float32 `json:"subCatLightingScore,omitempty" gorm:"column:subCatLightingScore"`
+
+	SubCatFixturesScore float32 `json:"subCatFixturesScore,omitempty" gorm:"column:subCatFixturesScore"`
+
+	TotalScore float32 `json:"totalScore,omitempty" gorm:"column:totalScore"`
 }
 
 func (b *Store) TableName() string {

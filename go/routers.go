@@ -52,11 +52,6 @@ func NewRouter() *gin.Engine {
 	return router
 }
 
-// Index is the index handler.
-func Index(c *gin.Context) {
-	c.String(http.StatusOK, "test")
-}
-
 var routes = Routes{
 	{
 		"Index",

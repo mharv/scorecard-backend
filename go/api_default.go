@@ -41,6 +41,286 @@ func setMaterialScores(material *MaterialInstance) {
 
 }
 
+func average(scores []float32) float32 {
+	n := len(scores)
+	if n == 0 {
+		return 0
+	}
+
+	var sum float32 = 0
+	for i := 0; i < n; i++ {
+
+		// adding the values of
+		// array to the variable sum
+		sum += (scores[i])
+	}
+	result := (float32(sum)) / (float32(n))
+	return result
+}
+
+func setStoreScores(storeId int32) {
+	// get all materials with storeId
+	fmt.Println(storeId)
+	// sql query for materials by store id
+	id := storeId
+	var materialInstances []MaterialInstance
+
+	if result := Config.DB.Where("storeId = ?", id).Find(&materialInstances); result.Error != nil {
+		fmt.Println("error getting material stores")
+	}
+
+	var tempCategoryCSF []float32
+	var tempCategoryMU []float32
+	var tempCategoryFF []float32
+	// manufacturer location arrays for sub categories
+	var tempSubCategoryFlooringManLoc []float32
+	var tempSubCategoryWallManLoc []float32
+	var tempSubCategoryCeilingManLoc []float32
+	var tempSubCategoryFacadeManLoc []float32
+	var tempSubCategoryPOSManLoc []float32
+	var tempSubCategoryProdShelvingManLoc []float32
+	var tempSubCategoryBOHManLoc []float32
+	var tempSubCategoryBasinManLoc []float32
+	var tempSubCategoryFurnitureManLoc []float32
+	var tempSubCategoryLightingManLoc []float32
+	var tempSubCategoryFixturesManLoc []float32
+	// raw material arrays for sub categories
+	var tempSubCategoryFlooringRawMat []float32
+	var tempSubCategoryWallRawMat []float32
+	var tempSubCategoryCeilingRawMat []float32
+	var tempSubCategoryFacadeRawMat []float32
+	var tempSubCategoryPOSRawMat []float32
+	var tempSubCategoryProdShelvingRawMat []float32
+	var tempSubCategoryBOHRawMat []float32
+	var tempSubCategoryBasinRawMat []float32
+	var tempSubCategoryFurnitureRawMat []float32
+	var tempSubCategoryLightingRawMat []float32
+	var tempSubCategoryFixturesRawMat []float32
+	// EOL assessment arrays for sub categories
+	var tempSubCategoryFlooringEOLAssessment []float32
+	var tempSubCategoryWallEOLAssessment []float32
+	var tempSubCategoryCeilingEOLAssessment []float32
+	var tempSubCategoryFacadeEOLAssessment []float32
+	var tempSubCategoryPOSEOLAssessment []float32
+	var tempSubCategoryProdShelvingEOLAssessment []float32
+	var tempSubCategoryBOHEOLAssessment []float32
+	var tempSubCategoryBasinEOLAssessment []float32
+	var tempSubCategoryFurnitureEOLAssessment []float32
+	var tempSubCategoryLightingEOLAssessment []float32
+	var tempSubCategoryFixturesEOLAssessment []float32
+	// product certification arrays for sub categories
+	var tempSubCategoryFlooringProdCert []float32
+	var tempSubCategoryWallProdCert []float32
+	var tempSubCategoryCeilingProdCert []float32
+	var tempSubCategoryFacadeProdCert []float32
+	var tempSubCategoryPOSProdCert []float32
+	var tempSubCategoryProdShelvingProdCert []float32
+	var tempSubCategoryBOHProdCert []float32
+	var tempSubCategoryBasinProdCert []float32
+	var tempSubCategoryFurnitureProdCert []float32
+	var tempSubCategoryLightingProdCert []float32
+	var tempSubCategoryFixturesProdCert []float32
+
+	// loop through array and get scores into temp arrays for each category and sub category
+	if len(materialInstances) > 0 {
+		for _, material := range materialInstances {
+			// get category scores
+			if material.Category == "Core structure & finish" {
+				tempCategoryCSF = append(tempCategoryCSF, material.TotalScore)
+			}
+			if material.Category == "Module units" {
+				tempCategoryMU = append(tempCategoryMU, material.TotalScore)
+			}
+			if material.Category == "Furniture & fittings" {
+				tempCategoryFF = append(tempCategoryFF, material.TotalScore)
+			}
+			// get sub category scores
+			if material.SubCategory == "Flooring" {
+				tempSubCategoryFlooringManLoc = append(tempSubCategoryFlooringManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryFlooringRawMat = append(tempSubCategoryFlooringRawMat, material.RawMaterialScore)
+				tempSubCategoryFlooringEOLAssessment = append(tempSubCategoryFlooringEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryFlooringProdCert = append(tempSubCategoryFlooringProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Wall" {
+				tempSubCategoryWallManLoc = append(tempSubCategoryWallManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryWallRawMat = append(tempSubCategoryWallRawMat, material.RawMaterialScore)
+				tempSubCategoryWallEOLAssessment = append(tempSubCategoryWallEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryWallProdCert = append(tempSubCategoryWallProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Ceiling" {
+				tempSubCategoryCeilingManLoc = append(tempSubCategoryCeilingManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryCeilingRawMat = append(tempSubCategoryCeilingRawMat, material.RawMaterialScore)
+				tempSubCategoryCeilingEOLAssessment = append(tempSubCategoryCeilingEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryCeilingProdCert = append(tempSubCategoryCeilingProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Facade" {
+				tempSubCategoryFacadeManLoc = append(tempSubCategoryFacadeManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryFacadeRawMat = append(tempSubCategoryFacadeRawMat, material.RawMaterialScore)
+				tempSubCategoryFacadeEOLAssessment = append(tempSubCategoryFacadeEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryFacadeProdCert = append(tempSubCategoryFacadeProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "POS" {
+				tempSubCategoryPOSManLoc = append(tempSubCategoryPOSManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryPOSRawMat = append(tempSubCategoryPOSRawMat, material.RawMaterialScore)
+				tempSubCategoryPOSEOLAssessment = append(tempSubCategoryPOSEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryPOSProdCert = append(tempSubCategoryPOSProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Product shelving" {
+				tempSubCategoryProdShelvingManLoc = append(tempSubCategoryProdShelvingManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryProdShelvingRawMat = append(tempSubCategoryProdShelvingRawMat, material.RawMaterialScore)
+				tempSubCategoryProdShelvingEOLAssessment = append(tempSubCategoryProdShelvingEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryProdShelvingProdCert = append(tempSubCategoryProdShelvingProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "BOH" {
+				tempSubCategoryBOHManLoc = append(tempSubCategoryBOHManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryBOHRawMat = append(tempSubCategoryBOHRawMat, material.RawMaterialScore)
+				tempSubCategoryBOHEOLAssessment = append(tempSubCategoryBOHEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryBOHProdCert = append(tempSubCategoryBOHProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Basin" {
+				tempSubCategoryBasinManLoc = append(tempSubCategoryBasinManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryBasinRawMat = append(tempSubCategoryBasinRawMat, material.RawMaterialScore)
+				tempSubCategoryBasinEOLAssessment = append(tempSubCategoryBasinEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryBasinProdCert = append(tempSubCategoryBasinProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Furniture" {
+				tempSubCategoryFurnitureManLoc = append(tempSubCategoryFurnitureManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryFurnitureRawMat = append(tempSubCategoryFurnitureRawMat, material.RawMaterialScore)
+				tempSubCategoryFurnitureEOLAssessment = append(tempSubCategoryFurnitureEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryFurnitureProdCert = append(tempSubCategoryFurnitureProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Lighting" {
+				tempSubCategoryLightingManLoc = append(tempSubCategoryLightingManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryLightingRawMat = append(tempSubCategoryLightingRawMat, material.RawMaterialScore)
+				tempSubCategoryLightingEOLAssessment = append(tempSubCategoryLightingEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryLightingProdCert = append(tempSubCategoryLightingProdCert, material.ProductCertificationScore)
+			}
+			if material.SubCategory == "Fixtures" {
+				tempSubCategoryFixturesManLoc = append(tempSubCategoryFixturesManLoc, material.ManufacturerLocationScore)
+				tempSubCategoryFixturesRawMat = append(tempSubCategoryFixturesRawMat, material.RawMaterialScore)
+				tempSubCategoryFixturesEOLAssessment = append(tempSubCategoryFixturesEOLAssessment, material.EndOfLifeAssessmentScore)
+				tempSubCategoryFixturesProdCert = append(tempSubCategoryFixturesProdCert, material.ProductCertificationScore)
+			}
+		}
+	}
+
+	var catCSFScore = average(tempCategoryCSF)
+	var catMUScore = average(tempCategoryMU)
+	var catFFScore = average(tempCategoryFF)
+
+	// perform calculations and set variables
+	// average each sub category value for manufacturerLocation, rawMaterial, EOLassessmnet, produc cert
+	// do multiplier using scoreWeights for each sub category
+
+	var subCatFlooringScore = average(tempSubCategoryFlooringManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryFlooringRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryFlooringEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryFlooringProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatWallScore = average(tempSubCategoryWallManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryWallRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryWallEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryWallProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatCeilingScore = average(tempSubCategoryCeilingManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryCeilingRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryCeilingEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryCeilingProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatFacadeScore = average(tempSubCategoryFacadeManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryFacadeRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryFacadeEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryFacadeProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatPOSScore = average(tempSubCategoryPOSManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryPOSRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryPOSEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryPOSProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatProdShelvingScore = average(tempSubCategoryProdShelvingManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryProdShelvingRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryProdShelvingEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryProdShelvingProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatBOHScore = average(tempSubCategoryBOHManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryBOHRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryBOHEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryBOHProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatBasinScore = average(tempSubCategoryBasinManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryBasinRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryBasinEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryBasinProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatFurnitureScore = average(tempSubCategoryFurnitureManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryFurnitureRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryFurnitureEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryFurnitureProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatLightingScore = average(tempSubCategoryLightingManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryLightingRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryLightingEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryLightingProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	var subCatFixturesScore = average(tempSubCategoryFixturesManLoc)*Lookups.ScoreWeights["Manufacturer Location"] +
+		average(tempSubCategoryFixturesRawMat)*Lookups.ScoreWeights["Raw material"] +
+		average(tempSubCategoryFixturesEOLAssessment)*Lookups.ScoreWeights["End of life assessment"] +
+		average(tempSubCategoryFixturesProdCert)*Lookups.ScoreWeights["Product Certification"]
+
+	// multiply by subcategorycontribution lookup and add results together
+	// save to totalScore column
+	var totalScore float32 = subCatFlooringScore*Lookups.SubCategoryContribution["Flooring"] +
+		subCatWallScore*Lookups.SubCategoryContribution["Wall"] +
+		subCatCeilingScore*Lookups.SubCategoryContribution["Ceiling"] +
+		subCatFacadeScore*Lookups.SubCategoryContribution["Facade"] +
+		subCatPOSScore*Lookups.SubCategoryContribution["POS"] +
+		subCatProdShelvingScore*Lookups.SubCategoryContribution["Product shelving"] +
+		subCatBOHScore*Lookups.SubCategoryContribution["BOH"] +
+		subCatBasinScore*Lookups.SubCategoryContribution["Basin"] +
+		subCatFurnitureScore*Lookups.SubCategoryContribution["Furniture"] +
+		subCatLightingScore*Lookups.SubCategoryContribution["Lighting"] +
+		subCatFixturesScore*Lookups.SubCategoryContribution["Fixtures"]
+
+	fmt.Println("totalscore: ")
+	fmt.Println(totalScore)
+
+	// save changes to store
+	var store Store
+
+	if result := Config.DB.Where("id = ?", id).First(&store); result.Error != nil {
+		fmt.Println("error getting store")
+	} else {
+
+		store.CatCSFScore = catCSFScore
+		store.CatMUScore = catMUScore
+		store.CatFFScore = catFFScore
+		store.SubCatFlooringScore = subCatFlooringScore
+		store.SubCatWallScore = subCatWallScore
+		store.SubCatCeilingScore = subCatCeilingScore
+		store.SubCatFacadeScore = subCatFacadeScore
+		store.SubCatPOSScore = subCatPOSScore
+		store.SubCatProdShelvingScore = subCatProdShelvingScore
+		store.SubCatBOHScore = subCatBOHScore
+		store.SubCatBasinScore = subCatBasinScore
+		store.SubCatFurnitureScore = subCatFurnitureScore
+		store.SubCatLightingScore = subCatLightingScore
+		store.SubCatFixturesScore = subCatFixturesScore
+		store.TotalScore = totalScore
+
+		if result := Config.DB.Save(&store); result.Error != nil {
+			fmt.Println("saving store failed")
+		} else {
+			fmt.Println("saving store success")
+		}
+	}
+}
+
+// Index is the index handler.
+func Index(c *gin.Context) {
+	setStoreScores(1)
+	c.String(http.StatusOK, "test")
+}
+
 // DeleteCommentsCommentId -
 func DeleteCommentsCommentId(c *gin.Context) {
 	var comment Comment
@@ -277,19 +557,19 @@ func PostMaterialInstance(c *gin.Context) {
 	// pass incoming material instance to function
 	// set values based on lookups in calcs
 	setMaterialScores(&materialInstance)
-	fmt.Println(materialInstance)
 
 	// update store totals function call
-	// setStoreScore()
+	// setStoreScores()
 
 	//testing
-	c.JSON(http.StatusOK, materialInstance)
+	// fmt.Println(materialInstance)
+	// c.JSON(http.StatusOK, materialInstance)
 
-	// if result := Config.DB.Create(&materialInstance); result.Error != nil {
-	// 	c.AbortWithStatus(http.StatusNotFound)
-	// } else {
-	// 	c.JSON(http.StatusOK, materialInstance)
-	// }
+	if result := Config.DB.Create(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.JSON(http.StatusOK, materialInstance)
+	}
 }
 
 // PostMaterialType -
@@ -332,30 +612,33 @@ func PostUser(c *gin.Context) {
 
 // PutMaterialInstancesMaterialInstanceId -
 func PutMaterialInstancesMaterialInstanceId(c *gin.Context) {
-	// id := c.Params.ByName("materialInstanceId")
+	id := c.Params.ByName("materialInstanceId")
 	var materialInstance MaterialInstance
 
-	// pass incoming material instance to function
-	// set values based on lookups in calcs
-	setMaterialScores(&materialInstance)
-	fmt.Println(materialInstance)
+	// check if material exists
+	if result := Config.DB.Where("id = ?", id).First(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		// get body of request, assign to variable
+		c.BindJSON(&materialInstance)
 
-	// update store totals function call
-	// setStoreScore()
+		// pass incoming material instance to function
+		// set values based on lookups in calcs
+		setMaterialScores(&materialInstance)
 
-	//testing
-	c.JSON(http.StatusOK, materialInstance)
+		// update store totals function call
+		// setStoreScores()
 
-	// if result := Config.DB.Where("id = ?", id).First(&materialInstance); result.Error != nil {
-	// 	c.AbortWithStatus(http.StatusNotFound)
-	// } else {
-	// 	c.BindJSON(&materialInstance)
-	// 	if result := Config.DB.Save(&materialInstance); result.Error != nil {
-	// 		c.AbortWithStatus(http.StatusNotFound)
-	// 	} else {
-	// 		c.JSON(http.StatusOK, materialInstance)
-	// 	}
-	// }
+		//testing
+		// fmt.Println(materialInstance)
+		// c.JSON(http.StatusOK, materialInstance)
+
+		if result := Config.DB.Save(&materialInstance); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			c.JSON(http.StatusOK, materialInstance)
+		}
+	}
 }
 
 // PutMaterialTypesMaterialTypeId -
