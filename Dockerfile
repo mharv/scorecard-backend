@@ -3,6 +3,7 @@ WORKDIR /go/src
 
 COPY go ./go
 COPY db ./db
+COPY calculations ./calculations
 COPY main.go ./
 COPY go.mod ./
 COPY go.sum ./
