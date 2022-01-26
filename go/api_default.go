@@ -11,12 +11,35 @@
 package openapi
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	Lookups "github.com/mharv/scorecard-backend/calculations"
 	Config "github.com/mharv/scorecard-backend/db"
 )
+
+func setMaterialScores(material *MaterialInstance) {
+	// set material category
+	material.Category = Lookups.CategoryLookup[material.SubCategory]
+	// set circularity assessment
+	material.CircularityAssessment = Lookups.CircularityAssessment[material.EndOfLifeAssessment]
+	// set manufacturer location score
+	material.ManufacturerLocationScore = Lookups.Sourcing[material.ManufacturerLocation]
+	// set raw material score
+	material.RawMaterialScore = Lookups.ManufacturingMaterials[material.RawMaterial]
+	// set end of life assessment score
+	material.EndOfLifeAssessmentScore = Lookups.EndOfLifeSustainability[material.EndOfLifeAssessment]
+	// set set product certification score
+	material.ProductCertificationScore = Lookups.Certifications[material.ProductCertification]
+	// apply weights and sum
+	material.TotalScore = (material.ManufacturerLocationScore * Lookups.ScoreWeights["Manufacturer Location"]) +
+		(material.RawMaterialScore * Lookups.ScoreWeights["Raw material"]) +
+		(material.EndOfLifeAssessmentScore * Lookups.ScoreWeights["End of life assessment"]) +
+		(material.ProductCertificationScore * Lookups.ScoreWeights["Product Certification"])
+
+}
 
 // DeleteCommentsCommentId -
 func DeleteCommentsCommentId(c *gin.Context) {
@@ -251,11 +274,22 @@ func PostMaterialInstance(c *gin.Context) {
 	var materialInstance MaterialInstance
 	c.BindJSON(&materialInstance)
 
-	if result := Config.DB.Create(&materialInstance); result.Error != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-	} else {
-		c.JSON(http.StatusOK, materialInstance)
-	}
+	// pass incoming material instance to function
+	// set values based on lookups in calcs
+	setMaterialScores(&materialInstance)
+	fmt.Println(materialInstance)
+
+	// update store totals function call
+	// setStoreScore()
+
+	//testing
+	c.JSON(http.StatusOK, materialInstance)
+
+	// if result := Config.DB.Create(&materialInstance); result.Error != nil {
+	// 	c.AbortWithStatus(http.StatusNotFound)
+	// } else {
+	// 	c.JSON(http.StatusOK, materialInstance)
+	// }
 }
 
 // PostMaterialType -
@@ -298,19 +332,30 @@ func PostUser(c *gin.Context) {
 
 // PutMaterialInstancesMaterialInstanceId -
 func PutMaterialInstancesMaterialInstanceId(c *gin.Context) {
-	id := c.Params.ByName("materialInstanceId")
+	// id := c.Params.ByName("materialInstanceId")
 	var materialInstance MaterialInstance
 
-	if result := Config.DB.Where("id = ?", id).First(&materialInstance); result.Error != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-	} else {
-		c.BindJSON(&materialInstance)
-		if result := Config.DB.Save(&materialInstance); result.Error != nil {
-			c.AbortWithStatus(http.StatusNotFound)
-		} else {
-			c.JSON(http.StatusOK, materialInstance)
-		}
-	}
+	// pass incoming material instance to function
+	// set values based on lookups in calcs
+	setMaterialScores(&materialInstance)
+	fmt.Println(materialInstance)
+
+	// update store totals function call
+	// setStoreScore()
+
+	//testing
+	c.JSON(http.StatusOK, materialInstance)
+
+	// if result := Config.DB.Where("id = ?", id).First(&materialInstance); result.Error != nil {
+	// 	c.AbortWithStatus(http.StatusNotFound)
+	// } else {
+	// 	c.BindJSON(&materialInstance)
+	// 	if result := Config.DB.Save(&materialInstance); result.Error != nil {
+	// 		c.AbortWithStatus(http.StatusNotFound)
+	// 	} else {
+	// 		c.JSON(http.StatusOK, materialInstance)
+	// 	}
+	// }
 }
 
 // PutMaterialTypesMaterialTypeId -
