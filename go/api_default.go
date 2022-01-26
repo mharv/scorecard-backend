@@ -317,7 +317,6 @@ func setStoreScores(storeId int32) {
 
 // Index is the index handler.
 func Index(c *gin.Context) {
-	setStoreScores(1)
 	c.String(http.StatusOK, "test")
 }
 
@@ -568,6 +567,7 @@ func PostMaterialInstance(c *gin.Context) {
 	if result := Config.DB.Create(&materialInstance); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
+		setStoreScores(materialInstance.StoreId)
 		c.JSON(http.StatusOK, materialInstance)
 	}
 }
@@ -636,6 +636,7 @@ func PutMaterialInstancesMaterialInstanceId(c *gin.Context) {
 		if result := Config.DB.Save(&materialInstance); result.Error != nil {
 			c.AbortWithStatus(http.StatusNotFound)
 		} else {
+			setStoreScores(materialInstance.StoreId)
 			c.JSON(http.StatusOK, materialInstance)
 		}
 	}
