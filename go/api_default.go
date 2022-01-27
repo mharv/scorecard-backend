@@ -418,6 +418,14 @@ func Index(c *gin.Context) {
 
 func TopDesigners(c *gin.Context) {
 	n := c.Params.ByName("n")
+	// get all user IDs that are designer/architects
+	var users []User
+	// get all stores
+	var stores []Store
+
+	// for each designer ID, get an array of store scores
+
+	// get average of ech designer score array, sort.
 
 	c.String(http.StatusOK, "incomplete: "+n)
 }
