@@ -58,6 +58,36 @@ type CategoryScoresResponse struct {
 	GlobalMUAverage              float64 `json:"globalMUAverage"`
 }
 
+type ManufacturerSourcingCounters struct {
+	Globally   int `json:"globally"`
+	Regionally int `json:"regionally"`
+	Locally    int `json:"locally"`
+}
+
+type RawMaterialCounters struct {
+	VGM   int `json:"vgm"`
+	PRPVG int `json:"prpvg"`
+	RecM  int `json:"recm"`
+	ReuM  int `json:"reum"`
+	RetM  int `json:"retm"`
+}
+
+type EndOfLifeCounters struct {
+	NR    int `json:"nr"`
+	PR    int `json:"pr"`
+	FTRAD int `json:"ftrad"`
+	FR    int `json:"fr"`
+	RP    int `json:"rp"`
+	ATBRR int `json:"atbrr"`
+	TBS   int `json:"tbs"`
+}
+
+type MaterialCountsResponse struct {
+	EndOfLifeCounters            EndOfLifeCounters            `json:"endOfLifeCounters"`
+	RawMaterialCounters          RawMaterialCounters          `json:"rawMaterialCounters"`
+	ManufacturerSourcingCounters ManufacturerSourcingCounters `json:"manufacturerSourcingCounters"`
+}
+
 func setMaterialScores(material *MaterialInstance) {
 	// set material category
 	material.Category = Lookups.CategoryLookup[material.SubCategory]
@@ -444,7 +474,111 @@ func GlobalStoreScores(c *gin.Context) {
 }
 
 func MaterialCounts(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	var materials []MaterialInstance
+
+	if result := Config.DB.Find(&materials); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		// create raw material eol and manufacturer sourcing counters
+		globally := 0
+		regionally := 0
+		locally := 0
+		vgm := 0
+		prpvg := 0
+		recm := 0
+		reum := 0
+		retm := 0
+		nr := 0
+		pr := 0
+		ftrad := 0
+		fr := 0
+		rp := 0
+		atbrr := 0
+		tbs := 0
+
+		for _, material := range materials {
+			if material.EndOfLifeAssessment == "Not recyclable" {
+				nr += 1
+			}
+			if material.EndOfLifeAssessment == "Part recyclable" {
+				pr += 1
+			}
+			if material.EndOfLifeAssessment == "Finish to remain after decomission" {
+				ftrad += 1
+			}
+			if material.EndOfLifeAssessment == "Fully recyclable" {
+				fr += 1
+			}
+			if material.EndOfLifeAssessment == "Recycling program" {
+				rp += 1
+			}
+			if material.EndOfLifeAssessment == "Able to be reused/repurposed" {
+				atbrr += 1
+			}
+			if material.EndOfLifeAssessment == "Take Back Scheme" {
+				tbs += 1
+			}
+
+			if material.RawMaterial == "Virgin grade material" {
+				vgm += 1
+			}
+			if material.RawMaterial == "Part recycled, part virgin grade" {
+				prpvg += 1
+			}
+			if material.RawMaterial == "Recycled material" {
+				recm += 1
+			}
+			if material.RawMaterial == "Reused material" {
+				reum += 1
+			}
+			if material.RawMaterial == "Retained material" {
+				retm += 1
+			}
+
+			if material.ManufacturerLocation == "Globally" {
+				globally += 1
+			}
+			if material.ManufacturerLocation == "Regionally" {
+				regionally += 1
+			}
+			if material.ManufacturerLocation == "Locally" {
+				locally += 1
+			}
+		}
+
+		manufacturerSourcingCounters := ManufacturerSourcingCounters{
+			Globally:   globally,
+			Regionally: regionally,
+			Locally:    locally,
+		}
+
+		rawMaterialCounters := RawMaterialCounters{
+			VGM:   vgm,
+			PRPVG: prpvg,
+			RecM:  recm,
+			ReuM:  reum,
+			RetM:  retm,
+		}
+
+		endOfLifeCounters := EndOfLifeCounters{
+			NR:    nr,
+			PR:    pr,
+			FTRAD: ftrad,
+			FR:    fr,
+			RP:    rp,
+			ATBRR: atbrr,
+			TBS:   tbs,
+		}
+
+		response := MaterialCountsResponse{
+			EndOfLifeCounters:            endOfLifeCounters,
+			RawMaterialCounters:          rawMaterialCounters,
+			ManufacturerSourcingCounters: manufacturerSourcingCounters,
+		}
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 func CategoryScores(c *gin.Context) {
 	var materials []MaterialInstance
