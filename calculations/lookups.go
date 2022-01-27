@@ -88,3 +88,11 @@ var ScoreWeights = map[string]float32{
 	"End of life assessment": 0.45,
 	"Product Certification":  0.1,
 }
+
+var ManufacturingMaterialsLCA = map[string]float32{
+	"Virgin grade material":            1,
+	"Part recycled, part virgin grade": 1,
+	"Recycled material":                0.5,
+	"Reused material":                  0,
+	"Retained material":                0,
+}
