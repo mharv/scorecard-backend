@@ -22,6 +22,11 @@ import (
 	Config "github.com/mharv/scorecard-backend/db"
 )
 
+type DesignerAverageScore struct {
+	Designer     string  `json:"designer"`
+	AverageScore float64 `json:"averageScore"`
+}
+
 type RegionalScores struct {
 	Name         string  `json:"name"`
 	Count        int     `json:"count"`
@@ -418,16 +423,52 @@ func Index(c *gin.Context) {
 
 func TopDesigners(c *gin.Context) {
 	n := c.Params.ByName("n")
+	i, err := strconv.Atoi(n)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
 	// get all user IDs that are designer/architects
 	var users []User
+	if result := Config.DB.Where("accessLevel = ?", "pm/architect").Find(&users); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
 	// get all stores
 	var stores []Store
-
+	if result := Config.DB.Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
 	// for each designer ID, get an array of store scores
+	// get average of each designer score array,
 
-	// get average of ech designer score array, sort.
+	var designerAverages []DesignerAverageScore
 
-	c.String(http.StatusOK, "incomplete: "+n)
+	for _, designer := range users {
+		var tempDesignerScores []float64
+		for _, store := range stores {
+			if store.ArchitectId == designer.Id {
+				tempDesignerScores = append(tempDesignerScores, float64(store.TotalScore))
+			}
+		}
+		tempDesignerAverageScore := DesignerAverageScore{
+			Designer:     designer.Email,
+			AverageScore: averageFloat64(tempDesignerScores),
+		}
+		designerAverages = append(designerAverages, tempDesignerAverageScore)
+	}
+
+	//  sort highest to lowest.
+	sort.Slice(designerAverages[:], func(i, j int) bool {
+		return designerAverages[i].AverageScore > designerAverages[j].AverageScore
+	})
+
+	// get slice of top n
+	if i > len(users) {
+		i = len(users)
+	}
+
+	c.JSON(http.StatusOK, designerAverages[:i])
 }
 func TopStoreScores(c *gin.Context) {
 	n := c.Params.ByName("n")
@@ -453,7 +494,6 @@ func TopStoreScores(c *gin.Context) {
 		})
 
 		response := stores[:i]
-		fmt.Println(response)
 
 		c.JSON(http.StatusOK, response)
 	}
