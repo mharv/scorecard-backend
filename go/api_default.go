@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -407,11 +408,37 @@ func Index(c *gin.Context) {
 
 func TopDesigners(c *gin.Context) {
 	n := c.Params.ByName("n")
+
 	c.String(http.StatusOK, "incomplete: "+n)
 }
 func TopStoreScores(c *gin.Context) {
 	n := c.Params.ByName("n")
-	c.String(http.StatusOK, "incomplete: "+n)
+
+	i, err := strconv.Atoi(n)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
+	var stores []Store
+
+	if result := Config.DB.Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		// if value provided is greater than number of stores in db
+		if i > len(stores) {
+			i = len(stores)
+		}
+
+		// sort stores by total score
+		sort.Slice(stores[:], func(i, j int) bool {
+			return stores[i].TotalScore > stores[j].TotalScore
+		})
+
+		response := stores[:i]
+		fmt.Println(response)
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 func GlobalStoreScores(c *gin.Context) {
 	var stores []Store
