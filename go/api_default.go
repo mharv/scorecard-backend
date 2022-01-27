@@ -94,6 +94,11 @@ type MaterialScoresResponse struct {
 	LowestRatedMaterials  []MaterialInstance `json:"lowestRatedMaterials"`
 }
 
+type ScoresArchitectIdResponse struct {
+	AverageStoreScore float32 `json:"averageStoreScore"`
+	HighestStoreScore float32 `json:"highestStoreScore"`
+}
+
 func setMaterialScores(material *MaterialInstance) {
 	// set material category
 	material.Category = Lookups.CategoryLookup[material.SubCategory]
@@ -781,7 +786,42 @@ func TopMaterialsArchitectId(c *gin.Context) {
 }
 func ScoresArchitectId(c *gin.Context) {
 	id := c.Params.ByName("architectId")
-	c.String(http.StatusOK, "incomplete: "+id)
+
+	var stores []Store
+
+	if result := Config.DB.Where("architectId = ?", id).Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		var tempStoreScores []float32
+
+		for _, store := range stores {
+			tempStoreScores = append(tempStoreScores, store.TotalScore)
+		}
+
+		averageStoreScore := average(tempStoreScores)
+
+		// sort stores by total score get highest
+		sort.Slice(stores[:], func(i, j int) bool {
+			return stores[i].TotalScore > stores[j].TotalScore
+		})
+
+		var highestStoreScore float32
+
+		if len(stores) > 0 {
+			highestStoreScore = stores[0].TotalScore
+		} else {
+			highestStoreScore = 0
+		}
+
+		response := ScoresArchitectIdResponse{
+			AverageStoreScore: averageStoreScore,
+			HighestStoreScore: highestStoreScore,
+		}
+
+		// change the slice number to get top x
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 // DeleteCommentsCommentId -
