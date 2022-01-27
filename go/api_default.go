@@ -13,12 +13,33 @@ package openapi
 import (
 	"fmt"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	Lookups "github.com/mharv/scorecard-backend/calculations"
 	Config "github.com/mharv/scorecard-backend/db"
 )
+
+type RegionalScores struct {
+	Name         string  `json:"name"`
+	Count        int     `json:"count"`
+	AverageScore float64 `json:"averageScore"`
+}
+
+// regional scores is an array for now, in case of
+// hardcoding the response struct with region name fields
+type GlobalStoreScoresResponse struct {
+	GlobalAverage  float64          `json:"globalAverage"`
+	GlobalHighest  float64          `json:"globalHighest"`
+	GlobalLowest   float64          `json:"globalLowest"`
+	RegionalScores []RegionalScores `json:"regionalScores"`
+}
+
+type MaterialInstanceHistoryResponse struct {
+	Instance MaterialInstance          `json:"instance"`
+	History  []MaterialInstanceHistory `json:"history"`
+}
 
 func setMaterialScores(material *MaterialInstance) {
 	// set material category
@@ -55,6 +76,23 @@ func average(scores []float32) float32 {
 		sum += (scores[i])
 	}
 	result := (float32(sum)) / (float32(n))
+	return result
+}
+
+func averageFloat64(scores []float64) float64 {
+	n := len(scores)
+	if n == 0 {
+		return 0
+	}
+
+	var sum float64 = 0
+	for i := 0; i < n; i++ {
+
+		// adding the values of
+		// array to the variable sum
+		sum += (scores[i])
+	}
+	result := (float64(sum)) / (float64(n))
 	return result
 }
 
@@ -329,7 +367,63 @@ func TopStoreScores(c *gin.Context) {
 	c.String(http.StatusOK, "incomplete: "+n)
 }
 func GlobalStoreScores(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	var stores []Store
+
+	if result := Config.DB.Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		// create regional temp arrays
+
+		var tempStoreScores []float64
+		var tempANZScores []float64
+		var tempAsiaScores []float64
+		var tempEuropeScores []float64
+		var tempAmericasScores []float64
+
+		for _, store := range stores {
+			// do conditional logic on region name and append to approriate array
+			tempStoreScores = append(tempStoreScores, float64(store.TotalScore))
+			if store.Region == "ANZ" {
+				tempANZScores = append(tempANZScores, float64(store.TotalScore))
+			}
+			if store.Region == "Asia" {
+				tempAsiaScores = append(tempAsiaScores, float64(store.TotalScore))
+			}
+			if store.Region == "Europe" {
+				tempEuropeScores = append(tempEuropeScores, float64(store.TotalScore))
+			}
+			if store.Region == "Americas" {
+				tempAmericasScores = append(tempAmericasScores, float64(store.TotalScore))
+			}
+		}
+
+		globalAverage := averageFloat64(tempStoreScores)
+
+		// get highest and lowest scores, sort and get
+		globalStoreScoreLength := len(tempStoreScores)
+		sort.Float64s(tempStoreScores)
+		globalHighest := tempStoreScores[globalStoreScoreLength-1]
+		globalLowest := tempStoreScores[0]
+
+		var regionalScores []RegionalScores
+
+		// append each region to regionalScores
+		regionalScores = append(regionalScores, RegionalScores{"ANZ", len(tempANZScores), averageFloat64(tempANZScores)})
+		regionalScores = append(regionalScores, RegionalScores{"Asia", len(tempAsiaScores), averageFloat64(tempAsiaScores)})
+		regionalScores = append(regionalScores, RegionalScores{"Europe", len(tempEuropeScores), averageFloat64(tempEuropeScores)})
+		regionalScores = append(regionalScores, RegionalScores{"Americas", len(tempAmericasScores), averageFloat64(tempAmericasScores)})
+
+		response := GlobalStoreScoresResponse{
+			GlobalAverage:  globalAverage,
+			GlobalHighest:  globalHighest,
+			GlobalLowest:   globalLowest,
+			RegionalScores: regionalScores}
+
+		fmt.Println(response)
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 func MaterialCounts(c *gin.Context) {
@@ -445,11 +539,6 @@ func GetMaterialInstanceHistoryMaterialInstanceId(c *gin.Context) {
 	id := c.Params.ByName("materialInstanceId")
 	var materialInstance MaterialInstance
 	var materialInstanceHistory []MaterialInstanceHistory
-
-	type MaterialInstanceHistoryResponse struct {
-		instance MaterialInstance
-		history  []MaterialInstanceHistory
-	}
 
 	if result := Config.DB.Where("id = ?", id).Find(&materialInstance); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
