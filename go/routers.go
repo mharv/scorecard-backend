@@ -54,6 +54,62 @@ func NewRouter() *gin.Engine {
 
 var routes = Routes{
 	{
+		"TopDesigners",
+		http.MethodGet,
+		"/topDesigners",
+		TopDesigners,
+	},
+
+	{
+		"TopStoreScores",
+		http.MethodGet,
+		"/topStoreScores",
+		TopStoreScores,
+	},
+	{
+		"GlobalStoreScores",
+		http.MethodGet,
+		"/globalStoreScores",
+		GlobalStoreScores,
+	},
+	{
+		"RegionStoreAverages",
+		http.MethodGet,
+		"/regionStoreAverages",
+		RegionStoreAverages,
+	},
+	{
+		"CategoryScores",
+		http.MethodGet,
+		"/categoryScores",
+		CategoryScores,
+	},
+	{
+		"MaterialCounts",
+		http.MethodGet,
+		"/materialCounts",
+		MaterialCounts,
+	},
+	{
+		"MaterialScores",
+		http.MethodGet,
+		"/materialScores",
+		MaterialScores,
+	},
+	{
+		"TopMaterialsArchitectId",
+		http.MethodGet,
+		"/topMaterialsByArchitect/:architectId",
+		TopMaterialsArchitectId,
+	},
+	{
+		"ScoresArchitectId",
+		http.MethodGet,
+		"/scoresByArchitect/:architectId",
+		ScoresArchitectId,
+	},
+
+	{
 		"Index",
 		http.MethodGet,
 		"/",
