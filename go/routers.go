@@ -56,14 +56,14 @@ var routes = Routes{
 	{
 		"TopDesigners",
 		http.MethodGet,
-		"/topDesigners",
+		"/topDesigners/:n",
 		TopDesigners,
 	},
 
 	{
 		"TopStoreScores",
 		http.MethodGet,
-		"/topStoreScores",
+		"/topStoreScores/:n",
 		TopStoreScores,
 	},
 	{
@@ -72,12 +72,7 @@ var routes = Routes{
 		"/globalStoreScores",
 		GlobalStoreScores,
 	},
-	{
-		"RegionStoreAverages",
-		http.MethodGet,
-		"/regionStoreAverages",
-		RegionStoreAverages,
-	},
+
 	{
 		"CategoryScores",
 		http.MethodGet,
@@ -93,7 +88,7 @@ var routes = Routes{
 	{
 		"MaterialScores",
 		http.MethodGet,
-		"/materialScores",
+		"/materialScores/:n",
 		MaterialScores,
 	},
 	{

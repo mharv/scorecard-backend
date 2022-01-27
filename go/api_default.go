@@ -321,17 +321,17 @@ func Index(c *gin.Context) {
 }
 
 func TopDesigners(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	n := c.Params.ByName("n")
+	c.String(http.StatusOK, "incomplete: "+n)
 }
 func TopStoreScores(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	n := c.Params.ByName("n")
+	c.String(http.StatusOK, "incomplete: "+n)
 }
 func GlobalStoreScores(c *gin.Context) {
 	c.String(http.StatusOK, "incomplete")
 }
-func RegionStoreAverages(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
-}
+
 func MaterialCounts(c *gin.Context) {
 	c.String(http.StatusOK, "incomplete")
 }
@@ -339,13 +339,16 @@ func CategoryScores(c *gin.Context) {
 	c.String(http.StatusOK, "incomplete")
 }
 func MaterialScores(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	n := c.Params.ByName("n")
+	c.String(http.StatusOK, "incomplete: "+n)
 }
 func TopMaterialsArchitectId(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	id := c.Params.ByName("architectId")
+	c.String(http.StatusOK, "incomplete: "+id)
 }
 func ScoresArchitectId(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	id := c.Params.ByName("architectId")
+	c.String(http.StatusOK, "incomplete: "+id)
 }
 
 // DeleteCommentsCommentId -
