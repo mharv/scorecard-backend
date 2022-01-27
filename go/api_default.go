@@ -320,6 +320,34 @@ func Index(c *gin.Context) {
 	c.String(http.StatusOK, "test")
 }
 
+func TopDesigners(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func TopStoreScores(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func GlobalStoreScores(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func RegionStoreAverages(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func MaterialCounts(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func CategoryScores(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func MaterialScores(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func TopMaterialsArchitectId(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+func ScoresArchitectId(c *gin.Context) {
+	c.String(http.StatusOK, "incomplete")
+}
+
 // DeleteCommentsCommentId -
 func DeleteCommentsCommentId(c *gin.Context) {
 	var comment Comment
