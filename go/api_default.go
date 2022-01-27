@@ -89,6 +89,11 @@ type MaterialCountsResponse struct {
 	ManufacturerSourcingCounters ManufacturerSourcingCounters `json:"manufacturerSourcingCounters"`
 }
 
+type MaterialScoresResponse struct {
+	HighestRatedMaterials []MaterialInstance `json:"highestRatedMaterials"`
+	LowestRatedMaterials  []MaterialInstance `json:"lowestRatedMaterials"`
+}
+
 func setMaterialScores(material *MaterialInstance) {
 	// set material category
 	material.Category = Lookups.CategoryLookup[material.SubCategory]
@@ -717,7 +722,45 @@ func CategoryScores(c *gin.Context) {
 }
 func MaterialScores(c *gin.Context) {
 	n := c.Params.ByName("n")
-	c.String(http.StatusOK, "incomplete: "+n)
+
+	i, err := strconv.Atoi(n)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	}
+
+	var materials []MaterialInstance
+
+	if result := Config.DB.Find(&materials); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		// if value provided is greater than number of stores in db
+		if i > len(materials) {
+			i = len(materials)
+		}
+
+		// sort materials by total score get highest
+		sort.Slice(materials[:], func(i, j int) bool {
+			return materials[i].TotalScore > materials[j].TotalScore
+		})
+
+		tmp := materials[:i]
+		highestRatedMaterials := make([]MaterialInstance, len(tmp))
+		copy(highestRatedMaterials, tmp)
+
+		// sort materials by total score get highest
+		sort.Slice(materials[:], func(i, j int) bool {
+			return materials[i].TotalScore < materials[j].TotalScore
+		})
+
+		lowestRatedMaterials := materials[:i]
+
+		response := MaterialScoresResponse{
+			HighestRatedMaterials: highestRatedMaterials,
+			LowestRatedMaterials:  lowestRatedMaterials,
+		}
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 func TopMaterialsArchitectId(c *gin.Context) {
 	id := c.Params.ByName("architectId")
