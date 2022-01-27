@@ -41,6 +41,23 @@ type MaterialInstanceHistoryResponse struct {
 	History  []MaterialInstanceHistory `json:"history"`
 }
 
+type CategoryScoresResponse struct {
+	GlobalFlooringAverage        float64 `json:"globalFlooringAverage"`
+	GlobalWallAverage            float64 `json:"globalWallAverage"`
+	GlobalCeilingAverage         float64 `json:"globalCeilingAverage"`
+	GlobalFacadeAverage          float64 `json:"globalFacadeAverage"`
+	GlobalPOSAverage             float64 `json:"globalPOSAverage"`
+	GlobalProductShelvingAverage float64 `json:"globalProductShelvingAverage"`
+	GlobalBOHAverage             float64 `json:"globalBOHAverage"`
+	GlobalBasinAverage           float64 `json:"globalBasinAverage"`
+	GlobalFurnitureAverage       float64 `json:"globalFurnitureAverage"`
+	GlobalLightingAverage        float64 `json:"globalLightingAverage"`
+	GlobalFixturesAverage        float64 `json:"globalFixturesAverage"`
+	GlobalCSFAverage             float64 `json:"globalCSFAverage"`
+	GlobalFFAverage              float64 `json:"globalFFAverage"`
+	GlobalMUAverage              float64 `json:"globalMUAverage"`
+}
+
 func setMaterialScores(material *MaterialInstance) {
 	// set material category
 	material.Category = Lookups.CategoryLookup[material.SubCategory]
@@ -430,7 +447,112 @@ func MaterialCounts(c *gin.Context) {
 	c.String(http.StatusOK, "incomplete")
 }
 func CategoryScores(c *gin.Context) {
-	c.String(http.StatusOK, "incomplete")
+	var materials []MaterialInstance
+
+	if result := Config.DB.Find(&materials); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		// create category and subcat temp arrays
+
+		var tempFlooringScores []float64
+		var tempWallScores []float64
+		var tempCeilingScores []float64
+		var tempFacadeScores []float64
+		var tempPOSScores []float64
+		var tempProdShelvingScores []float64
+		var tempBOHScores []float64
+		var tempBasinScores []float64
+		var tempFurnitureScores []float64
+		var tempLightingScores []float64
+		var tempFixturesScores []float64
+
+		var tempCSFScores []float64
+		var tempMUScores []float64
+		var tempFFScores []float64
+
+		for _, material := range materials {
+			// do conditional logic on subcat and cat name, append to approriate array
+			if material.SubCategory == "Flooring" {
+				tempFlooringScores = append(tempFlooringScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Wall" {
+				tempWallScores = append(tempWallScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Ceiling" {
+				tempCeilingScores = append(tempCeilingScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Facade" {
+				tempFacadeScores = append(tempFacadeScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "POS" {
+				tempPOSScores = append(tempPOSScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Product shelving" {
+				tempProdShelvingScores = append(tempProdShelvingScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "BOH" {
+				tempBOHScores = append(tempBOHScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Basin" {
+				tempBasinScores = append(tempBasinScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Furniture" {
+				tempFurnitureScores = append(tempFurnitureScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Lighting" {
+				tempLightingScores = append(tempLightingScores, float64(material.TotalScore))
+			}
+			if material.SubCategory == "Fixtures" {
+				tempFixturesScores = append(tempFixturesScores, float64(material.TotalScore))
+			}
+
+			if material.Category == "Core structure & finish" {
+				tempCSFScores = append(tempCSFScores, float64(material.TotalScore))
+			}
+			if material.Category == "Module units" {
+				tempMUScores = append(tempMUScores, float64(material.TotalScore))
+			}
+			if material.Category == "Furniture & fittings" {
+				tempFFScores = append(tempFFScores, float64(material.TotalScore))
+			}
+		}
+
+		globalFlooringAverage := averageFloat64(tempFlooringScores)
+		globalWallAverage := averageFloat64(tempWallScores)
+		globalCeilingAverage := averageFloat64(tempCeilingScores)
+		globalFacadeAverage := averageFloat64(tempFacadeScores)
+		globalPOSAverage := averageFloat64(tempPOSScores)
+		globalProductShelvingAverage := averageFloat64(tempProdShelvingScores)
+		globalBOHAverage := averageFloat64(tempBOHScores)
+		globalBasinAverage := averageFloat64(tempBasinScores)
+		globalFurnitureAverage := averageFloat64(tempFurnitureScores)
+		globalLightingAverage := averageFloat64(tempLightingScores)
+		globalFixturesAverage := averageFloat64(tempFixturesScores)
+
+		globalCSFAverage := averageFloat64(tempCSFScores)
+		globalFFAverage := averageFloat64(tempFFScores)
+		globalMUAverage := averageFloat64(tempMUScores)
+
+		response := CategoryScoresResponse{
+			GlobalFlooringAverage:        globalFlooringAverage,
+			GlobalWallAverage:            globalWallAverage,
+			GlobalCeilingAverage:         globalCeilingAverage,
+			GlobalFacadeAverage:          globalFacadeAverage,
+			GlobalPOSAverage:             globalPOSAverage,
+			GlobalProductShelvingAverage: globalProductShelvingAverage,
+			GlobalBOHAverage:             globalBOHAverage,
+			GlobalBasinAverage:           globalBasinAverage,
+			GlobalFurnitureAverage:       globalFurnitureAverage,
+			GlobalLightingAverage:        globalLightingAverage,
+			GlobalFixturesAverage:        globalFixturesAverage,
+			GlobalCSFAverage:             globalCSFAverage,
+			GlobalFFAverage:              globalFFAverage,
+			GlobalMUAverage:              globalMUAverage,
+		}
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 func MaterialScores(c *gin.Context) {
 	n := c.Params.ByName("n")
