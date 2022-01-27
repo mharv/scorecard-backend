@@ -764,7 +764,20 @@ func MaterialScores(c *gin.Context) {
 }
 func TopMaterialsArchitectId(c *gin.Context) {
 	id := c.Params.ByName("architectId")
-	c.String(http.StatusOK, "incomplete: "+id)
+
+	var materials []MaterialInstance
+
+	if result := Config.DB.Where("creatorId = ?", id).Find(&materials); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		// sort materials by total score get highest
+		sort.Slice(materials[:], func(i, j int) bool {
+			return materials[i].TotalScore > materials[j].TotalScore
+		})
+
+		c.JSON(http.StatusOK, materials)
+	}
 }
 func ScoresArchitectId(c *gin.Context) {
 	id := c.Params.ByName("architectId")
