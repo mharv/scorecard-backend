@@ -96,3 +96,27 @@ var ManufacturingMaterialsLCA = map[string]float32{
 	"Reused material":                  0,
 	"Retained material":                0,
 }
+
+var CarbonFactors = map[string]float32{
+	"RigidTruck":       0.0004814,
+	"ArticulatedTruck": 0.0001645,
+	"Rail":             0.0000688,
+	"Sea":              0.0000326,
+	"Air":              0.0095791,
+}
+
+var TravelFactors = map[string]float32{
+	"Locally": (50 * CarbonFactors["RigidTruck"]),
+	"RegionallyRail": (15 * CarbonFactors["RigidTruck"]) +
+		(150 * CarbonFactors["ArticulatedTruck"]) +
+		(1000 * CarbonFactors["Rail"]),
+	"RegionallyAir": (15 * CarbonFactors["RigidTruck"]) +
+		(150 * CarbonFactors["ArticulatedTruck"]) +
+		(1000 * CarbonFactors["Air"]),
+	"GloballySea": (15 * CarbonFactors["RigidTruck"]) +
+		(150 * CarbonFactors["ArticulatedTruck"]) +
+		(10000 * CarbonFactors["Sea"]),
+	"GloballyAir": (15 * CarbonFactors["RigidTruck"]) +
+		(150 * CarbonFactors["ArticulatedTruck"]) +
+		(10000 * CarbonFactors["Air"]),
+}
