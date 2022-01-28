@@ -123,7 +123,7 @@ func setMaterialScores(material *MaterialInstance) {
 		(material.EndOfLifeAssessmentScore * Lookups.ScoreWeights["End of life assessment"]) +
 		(material.ProductCertificationScore * Lookups.ScoreWeights["Product Certification"])
 
-	// TODO calculate A1A3 and A4 carbon factors here
+	// calculate A1A3 and A4 carbon factors here
 	// get epicMaterial
 	var epicMaterial EpicMaterial
 
@@ -246,9 +246,16 @@ func setStoreScores(storeId int32) {
 	var tempSubCategoryLightingProdCert []float32
 	var tempSubCategoryFixturesProdCert []float32
 
+	var A1A3CarbonFactors float32 = 0.0
+	var A4CarbonFactors float32 = 0.0
+
 	// loop through array and get scores into temp arrays for each category and sub category
 	if len(materialInstances) > 0 {
 		for _, material := range materialInstances {
+			// get carbon factors
+			A1A3CarbonFactors += material.A1A3CarbonFactor
+			A4CarbonFactors += material.A4CarbonFactor
+
 			// get category scores
 			if material.Category == "Core structure & finish" {
 				tempCategoryCSF = append(tempCategoryCSF, material.TotalScore)
@@ -430,10 +437,39 @@ func setStoreScores(storeId int32) {
 		store.SubCatFurnitureScore = subCatFurnitureScore
 		store.SubCatLightingScore = subCatLightingScore
 		store.SubCatFixturesScore = subCatFixturesScore
+		store.TotalScoreUnweighted = totalScore
+		// store level GHG calc here
 
-		// TODO inject store level GHG calc function here
+		embodiedCarbon := (A1A3CarbonFactors + A4CarbonFactors) / store.RetailSqm
 
-		store.TotalScore = totalScore
+		store.GHGEmissions = embodiedCarbon
+
+		fmt.Println(store.GHGEmissions)
+
+		var emissionSize string
+		if store.LocationType == "Store" {
+			if embodiedCarbon <= Lookups.RetailStoreEmissions["Low"] {
+				emissionSize = "Low"
+			}
+			if embodiedCarbon > Lookups.RetailStoreEmissions["Low"] && embodiedCarbon <= Lookups.RetailStoreEmissions["Medium"] {
+				emissionSize = "Medium"
+			}
+			if embodiedCarbon > Lookups.RetailStoreEmissions["Medium"] {
+				emissionSize = "High"
+			}
+		} else {
+			if embodiedCarbon <= Lookups.RetailCounterEmissions["Low"] {
+				emissionSize = "Low"
+			}
+			if embodiedCarbon > Lookups.RetailCounterEmissions["Low"] && embodiedCarbon <= Lookups.RetailCounterEmissions["Medium"] {
+				emissionSize = "Medium"
+			}
+			if embodiedCarbon > Lookups.RetailCounterEmissions["Medium"] {
+				emissionSize = "High"
+			}
+		}
+
+		store.TotalScore = totalScore * Lookups.RetailEmissionsMultiplier[emissionSize]
 
 		if result := Config.DB.Save(&store); result.Error != nil {
 			fmt.Println("saving store failed")
