@@ -120,3 +120,20 @@ var TravelFactors = map[string]float32{
 		(150 * CarbonFactors["ArticulatedTruck"]) +
 		(10000 * CarbonFactors["Air"]),
 }
+
+var RetailEmissionsMultiplier = map[string]float32{
+	"Low":    1.2,
+	"Medium": 1,
+	"High":   0.8,
+}
+
+var RetailStoreEmissions = map[string]float32{
+	"Low":    200,
+	"Medium": 400,
+	"High":   600,
+}
+var RetailCounterEmissions = map[string]float32{
+	"Low":    100,
+	"Medium": 200,
+	"High":   300,
+}
