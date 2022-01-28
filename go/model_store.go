@@ -112,11 +112,11 @@ type Store struct {
 
 	SubCatFixturesScore float32 `json:"subCatFixturesScore,omitempty" gorm:"column:subCatFixturesScore"`
 
-	TotalScore float32 `json:"totalScore,omitempty" gorm:"column:totalScore"`
+	TotalScore float32 `json:"totalScore" gorm:"column:totalScore"`
 
-	TotalScoreUnweighted float32 `json:"totalScore,omitempty" gorm:"column:totalScoreUnweighted"`
+	TotalScoreUnweighted float32 `json:"totalScoreUnweighted,omitempty" gorm:"column:totalScoreUnweighted"`
 
-	GHGEmissions float32 `json:"totalScore,omitempty" gorm:"column:GHGEmissions"`
+	GHGEmissions float32 `json:"GHGEmissions,omitempty" gorm:"column:GHGEmissions"`
 }
 
 func (b *Store) TableName() string {
