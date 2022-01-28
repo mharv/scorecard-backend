@@ -70,6 +70,12 @@ type MaterialInstance struct {
 	TotalScore float32 `json:"totalScore,omitempty" gorm:"column:totalScore"`
 
 	CreatorId int32 `json:"creatorId,omitempty" gorm:"column:creatorId"`
+
+	A1A3CarbonFactor float32 `json:"totalScore,omitempty" gorm:"column:A1A3CarbonFactor"`
+
+	A4CarbonFactor float32 `json:"totalScore,omitempty" gorm:"column:A4CarbonFactor"`
+
+	PrimaryTransportMethod string `json:"materialDescription,omitempty" gorm:"column:primaryTransportMethod"`
 }
 
 func (b *MaterialInstance) TableName() string {
