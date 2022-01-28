@@ -37,8 +37,8 @@ type RegionalScores struct {
 // hardcoding the response struct with region name fields
 type GlobalStoreScoresResponse struct {
 	GlobalAverage  float64          `json:"globalAverage"`
-	GlobalHighest  float64          `json:"globalHighest"`
-	GlobalLowest   float64          `json:"globalLowest"`
+	GlobalHighest  Store            `json:"globalHighest"`
+	GlobalLowest   Store            `json:"globalLowest"`
 	RegionalScores []RegionalScores `json:"regionalScores"`
 }
 
@@ -123,6 +123,7 @@ func setMaterialScores(material *MaterialInstance) {
 		(material.EndOfLifeAssessmentScore * Lookups.ScoreWeights["End of life assessment"]) +
 		(material.ProductCertificationScore * Lookups.ScoreWeights["Product Certification"])
 
+	// TODO calculate A1A3 and A4 carbon factors here
 }
 
 func average(scores []float32) float32 {
@@ -406,6 +407,9 @@ func setStoreScores(storeId int32) {
 		store.SubCatFurnitureScore = subCatFurnitureScore
 		store.SubCatLightingScore = subCatLightingScore
 		store.SubCatFixturesScore = subCatFixturesScore
+
+		// TODO inject store level GHG calc function here
+
 		store.TotalScore = totalScore
 
 		if result := Config.DB.Save(&store); result.Error != nil {
@@ -418,7 +422,7 @@ func setStoreScores(storeId int32) {
 
 // Index is the index handler.
 func Index(c *gin.Context) {
-	c.String(http.StatusOK, "test")
+	c.String(http.StatusOK, "Hello, Aesop!")
 }
 
 func TopDesigners(c *gin.Context) {
@@ -535,8 +539,17 @@ func GlobalStoreScores(c *gin.Context) {
 		// get highest and lowest scores, sort and get
 		globalStoreScoreLength := len(tempStoreScores)
 		sort.Float64s(tempStoreScores)
-		globalHighest := tempStoreScores[globalStoreScoreLength-1]
-		globalLowest := tempStoreScores[0]
+		// globalHighest := tempStoreScores[globalStoreScoreLength-1]
+		// globalLowest := tempStoreScores[0]
+
+		// sort materials by total score get highest
+		sort.Slice(stores[:], func(i, j int) bool {
+			return stores[i].TotalScore > stores[j].TotalScore
+		})
+
+		globalHighest := stores[0]
+
+		globalLowest := stores[globalStoreScoreLength-1]
 
 		var regionalScores []RegionalScores
 
