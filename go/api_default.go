@@ -505,7 +505,7 @@ func TopStoreScores(c *gin.Context) {
 func GlobalStoreScores(c *gin.Context) {
 	var stores []Store
 
-	if result := Config.DB.Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("storeStatus != ?", "DRAFT").Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 
@@ -565,7 +565,7 @@ func GlobalStoreScores(c *gin.Context) {
 			GlobalLowest:   globalLowest,
 			RegionalScores: regionalScores}
 
-		fmt.Println(response)
+		// fmt.Println(response)
 
 		c.JSON(http.StatusOK, response)
 	}
