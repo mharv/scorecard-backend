@@ -499,7 +499,7 @@ func TopDesigners(c *gin.Context) {
 
 	// get all stores
 	var stores []Store
-	if result := Config.DB.Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("storeStatus <> ?", "DRAFT").Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	}
 	// for each designer ID, get an array of store scores
@@ -543,7 +543,7 @@ func TopStoreScores(c *gin.Context) {
 
 	var stores []Store
 
-	if result := Config.DB.Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("storeStatus <> ?", "DRAFT").Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		// if value provided is greater than number of stores in db
@@ -909,7 +909,7 @@ func ScoresArchitectId(c *gin.Context) {
 
 	var stores []Store
 
-	if result := Config.DB.Where("architectId = ?", id).Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("architectId = ?", id).Where("storeStatus <> ?", "DRAFT").Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 
