@@ -124,6 +124,29 @@ func setMaterialScores(material *MaterialInstance) {
 		(material.ProductCertificationScore * Lookups.ScoreWeights["Product Certification"])
 
 	// TODO calculate A1A3 and A4 carbon factors here
+	// get epicMaterial
+	var epicMaterial EpicMaterial
+
+	if result := Config.DB.Where("material = ?", material.ItemType).Find(&epicMaterial); result.Error != nil {
+		fmt.Println("error getting material stores")
+	}
+
+	fmt.Println(epicMaterial)
+	// possibly do unit conversion here if needed?
+
+	material.A1A3CarbonFactor = material.MaterialQuantity *
+		Lookups.ManufacturingMaterialsLCA[material.RawMaterial] *
+		epicMaterial.EmbodiedGHGE
+
+	var travelFactor float32
+	if material.ManufacturerLocation == "Locally" {
+		travelFactor = Lookups.TravelFactors["Locally"]
+	} else {
+		travelFactor = Lookups.TravelFactors[material.ManufacturerLocation+material.PrimaryTransportMethod]
+	}
+
+	material.A4CarbonFactor = travelFactor * material.MaterialQuantity
+
 }
 
 func average(scores []float32) float32 {
