@@ -79,13 +79,11 @@ type RawMaterialCounters struct {
 }
 
 type EndOfLifeCounters struct {
-	NR    int `json:"nr"`
-	PR    int `json:"pr"`
-	FTRAD int `json:"ftrad"`
-	FR    int `json:"fr"`
-	RP    int `json:"rp"`
-	ATBRR int `json:"atbrr"`
-	TBS   int `json:"tbs"`
+	NR  int `json:"nr"`
+	PR  int `json:"pr"`
+	FTR int `json:"ftr"`
+	REC int `json:"rec"`
+	REU int `json:"reu"`
 }
 
 type MaterialCountsResponse struct {
@@ -648,33 +646,25 @@ func MaterialCounts(c *gin.Context) {
 		retm := 0
 		nr := 0
 		pr := 0
-		ftrad := 0
-		fr := 0
-		rp := 0
-		atbrr := 0
-		tbs := 0
+		ftr := 0
+		rec := 0
+		reu := 0
 
 		for _, material := range materials {
-			if material.EndOfLifeAssessment == "Not recyclable" {
+			if material.CircularityAssessment == "Not recyclable" {
 				nr += 1
 			}
-			if material.EndOfLifeAssessment == "Part recyclable" {
+			if material.CircularityAssessment == "Part recyclable" {
 				pr += 1
 			}
-			if material.EndOfLifeAssessment == "Finish to remain after decomission" {
-				ftrad += 1
+			if material.CircularityAssessment == "Finish to remain" {
+				ftr += 1
 			}
-			if material.EndOfLifeAssessment == "Fully recyclable" {
-				fr += 1
+			if material.CircularityAssessment == "Recyclable" {
+				rec += 1
 			}
-			if material.EndOfLifeAssessment == "Recycling program" {
-				rp += 1
-			}
-			if material.EndOfLifeAssessment == "Able to be reused/repurposed" {
-				atbrr += 1
-			}
-			if material.EndOfLifeAssessment == "Take Back Scheme" {
-				tbs += 1
+			if material.CircularityAssessment == "Reusable" {
+				reu += 1
 			}
 
 			if material.RawMaterial == "Virgin grade material" {
@@ -719,13 +709,11 @@ func MaterialCounts(c *gin.Context) {
 		}
 
 		endOfLifeCounters := EndOfLifeCounters{
-			NR:    nr,
-			PR:    pr,
-			FTRAD: ftrad,
-			FR:    fr,
-			RP:    rp,
-			ATBRR: atbrr,
-			TBS:   tbs,
+			NR:  nr,
+			PR:  pr,
+			FTR: ftr,
+			REC: rec,
+			REU: reu,
 		}
 
 		response := MaterialCountsResponse{
