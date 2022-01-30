@@ -17,6 +17,8 @@ type User struct {
 
 	Email string `json:"email" gorm:"column:email"`
 
+	DisplayName string `json:"displayName" gorm:"column:displayName"`
+
 	// The date that the user was created.
 	CreatedDate string `json:"createdDate" gorm:"column:createdDate"`
 

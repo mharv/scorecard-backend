@@ -16,6 +16,8 @@ type Store struct {
 
 	StoreName string `json:"storeName,omitempty" gorm:"column:storeName"`
 
+	StoreCode string `json:"storeCode,omitempty" gorm:"column:storeCode"`
+
 	Country string `json:"country,omitempty" gorm:"column:country"`
 
 	ScorecardType string `json:"scorecardType,omitempty" gorm:"column:scorecardType"`
