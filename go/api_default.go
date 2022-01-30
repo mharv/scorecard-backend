@@ -966,6 +966,29 @@ func DeleteMaterialTypesMaterialTypeId(c *gin.Context) {
 	}
 }
 
+// DeleteMaterialInstanceMaterialInstanceId -
+func DeleteMaterialInstanceMaterialInstanceId(c *gin.Context) {
+	var materialInstance MaterialInstance
+	id := c.Params.ByName("materialInstanceId")
+	var storeId int32
+
+	if result := Config.DB.Where("id = ?", id).Find(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		fmt.Println(materialInstance.StoreId)
+		storeId = materialInstance.StoreId
+	}
+
+	if result := Config.DB.Where("id = ?", id).Delete(&materialInstance); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		// recalculate store id
+		fmt.Println(storeId)
+		setStoreScores(storeId)
+		c.JSON(http.StatusOK, gin.H{"materialInstanceId " + id: "is deleted"})
+	}
+}
+
 // DeleteStoresStoreId -
 func DeleteStoresStoreId(c *gin.Context) {
 	var store Store

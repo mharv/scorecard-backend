@@ -126,6 +126,13 @@ var routes = Routes{
 	},
 
 	{
+		"DeleteMaterialInstanceMaterialInstanceId",
+		http.MethodDelete,
+		"/materialInstances/:materialInstanceId",
+		DeleteMaterialInstanceMaterialInstanceId,
+	},
+
+	{
 		"DeleteStoresStoreId",
 		http.MethodDelete,
 		"/stores/:storeId",
