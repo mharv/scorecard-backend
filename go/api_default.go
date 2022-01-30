@@ -983,7 +983,7 @@ func DeleteMaterialInstanceMaterialInstanceId(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		// recalculate store id
-		fmt.Println(storeId)
+		// fmt.Println(storeId)
 		setStoreScores(storeId)
 		c.JSON(http.StatusOK, gin.H{"materialInstanceId " + id: "is deleted"})
 	}
