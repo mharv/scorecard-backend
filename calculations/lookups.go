@@ -127,6 +127,8 @@ var RetailEmissionsMultiplier = map[string]float32{
 	"High":   0.8,
 }
 
+// are these the only location types??
+
 var RetailStoreEmissions = map[string]float32{
 	"Low":    200,
 	"Medium": 400,

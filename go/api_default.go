@@ -136,13 +136,14 @@ func setMaterialScores(material *MaterialInstance) {
 		Lookups.ManufacturingMaterialsLCA[material.RawMaterial] *
 		epicMaterial.EmbodiedGHGE
 
+	// What happens if options are chosen that do not match the below conditions?
 	var travelFactor float32
 	if material.ManufacturerLocation == "Locally" {
 		travelFactor = Lookups.TravelFactors["Locally"]
 	} else {
 		travelFactor = Lookups.TravelFactors[material.ManufacturerLocation+material.PrimaryTransportMethod]
 	}
-
+	material.Unit = epicMaterial.FunctionalUnit
 	material.A4CarbonFactor = travelFactor * material.MaterialQuantity
 
 }
