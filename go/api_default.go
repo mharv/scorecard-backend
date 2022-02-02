@@ -130,13 +130,13 @@ func setMaterialScores(material *MaterialInstance) {
 	}
 
 	fmt.Println(epicMaterial)
-	// possibly do unit conversion here if needed?
+	// possibly do unit conversion here if needed??
 
 	material.A1A3CarbonFactor = material.MaterialQuantity *
 		Lookups.ManufacturingMaterialsLCA[material.RawMaterial] *
 		epicMaterial.EmbodiedGHGE
 
-	// What happens if options are chosen that do not match the below conditions?
+	// What happens if options are chosen that do not match the below conditions???
 	var travelFactor float32
 	if material.ManufacturerLocation == "Locally" {
 		travelFactor = Lookups.TravelFactors["Locally"]
@@ -563,7 +563,7 @@ func TopStoreScores(c *gin.Context) {
 func GlobalStoreScores(c *gin.Context) {
 	var stores []Store
 
-	if result := Config.DB.Where("storeStatus <> ?", "DRAFT").Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("storeStatus <> ?", "DRAFT").Where("totalScore <> ?", 0).Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 
@@ -1066,7 +1066,7 @@ func GetStoresArchitectId(c *gin.Context) {
 	id := c.Params.ByName("architectId")
 	var stores []Store
 
-	if result := Config.DB.Where("architectId = ?", id).Find(&stores); result.Error != nil {
+	if result := Config.DB.Where("architectId = ?", id).Or("creatorId = ?", id).Find(&stores); result.Error != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		c.JSON(http.StatusOK, stores)
