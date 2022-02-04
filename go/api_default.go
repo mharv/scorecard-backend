@@ -99,8 +99,8 @@ type MaterialScoresResponse struct {
 }
 
 type ScoresArchitectIdResponse struct {
-	AverageStoreScore float32 `json:"averageStoreScore"`
-	HighestStoreScore float32 `json:"highestStoreScore"`
+	AverageStoreScore float64 `json:"averageStoreScore"`
+	HighestStoreScore float64 `json:"highestStoreScore"`
 }
 
 func setMaterialScores(material *MaterialInstance) {
@@ -859,6 +859,8 @@ func MaterialScores(c *gin.Context) {
 			i = len(materials)
 		}
 
+		// TODO round totalScores for each material
+
 		// sort materials by total score get highest
 		sort.Slice(materials[:], func(i, j int) bool {
 			return materials[i].TotalScore > materials[j].TotalScore
@@ -892,6 +894,8 @@ func TopMaterialsArchitectId(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 
+		// TODO round totalScores for each material
+
 		// sort materials by total score get highest
 		sort.Slice(materials[:], func(i, j int) bool {
 			return materials[i].TotalScore > materials[j].TotalScore
@@ -915,17 +919,17 @@ func ScoresArchitectId(c *gin.Context) {
 			tempStoreScores = append(tempStoreScores, store.TotalScore)
 		}
 
-		averageStoreScore := average(tempStoreScores)
+		averageStoreScore := math.Round(float64(average(tempStoreScores)))
 
 		// sort stores by total score get highest
 		sort.Slice(stores[:], func(i, j int) bool {
 			return stores[i].TotalScore > stores[j].TotalScore
 		})
 
-		var highestStoreScore float32
+		var highestStoreScore float64
 
 		if len(stores) > 0 {
-			highestStoreScore = stores[0].TotalScore
+			highestStoreScore = math.Round(float64(stores[0].TotalScore))
 		} else {
 			highestStoreScore = 0
 		}
