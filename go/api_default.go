@@ -37,10 +37,10 @@ type RegionalScores struct {
 // regional scores is an array for now, in case of
 // hardcoding the response struct with region name fields
 type GlobalStoreScoresResponse struct {
-	GlobalAverage  float64          `json:"globalAverage"`
-	GlobalHighest  Store            `json:"globalHighest"`
-	GlobalLowest   Store            `json:"globalLowest"`
-	RegionalScores []RegionalScores `json:"regionalScores"`
+	GlobalAverage  float64             `json:"globalAverage"`
+	GlobalHighest  TopStoreScoreObject `json:"globalHighest"`
+	GlobalLowest   TopStoreScoreObject `json:"globalLowest"`
+	RegionalScores []RegionalScores    `json:"regionalScores"`
 }
 
 type MaterialInstanceHistoryResponse struct {
@@ -77,6 +77,11 @@ type RawMaterialCounters struct {
 	RecM  int `json:"recm"`
 	ReuM  int `json:"reum"`
 	RetM  int `json:"retm"`
+}
+
+type TopStoreScoreObject struct {
+	StoreName  string  `json:"storeName"`
+	TotalScore float64 `json:"totalScore"`
 }
 
 type EndOfLifeCounters struct {
@@ -533,6 +538,7 @@ func TopDesigners(c *gin.Context) {
 
 	c.JSON(http.StatusOK, designerAverages[:i])
 }
+
 func TopStoreScores(c *gin.Context) {
 	n := c.Params.ByName("n")
 
@@ -551,17 +557,21 @@ func TopStoreScores(c *gin.Context) {
 			i = len(stores)
 		}
 
-		// TODO need to round
-		// for _, store := range stores {
-		// 	store.TotalScore = float32(math.Round(float64(store.TotalScore)))
-		// }
+		var topStoreScoreResponse []TopStoreScoreObject
+
+		for _, store := range stores {
+			topStoreScoreResponse = append(topStoreScoreResponse, TopStoreScoreObject{
+				StoreName:  store.StoreName,
+				TotalScore: math.Round(float64(store.TotalScore)),
+			})
+		}
 
 		// sort stores by total score
-		sort.Slice(stores[:], func(i, j int) bool {
-			return stores[i].TotalScore > stores[j].TotalScore
+		sort.Slice(topStoreScoreResponse[:], func(i, j int) bool {
+			return topStoreScoreResponse[i].TotalScore > topStoreScoreResponse[j].TotalScore
 		})
 
-		response := stores[:i]
+		response := topStoreScoreResponse[:i]
 
 		c.JSON(http.StatusOK, response)
 	}
@@ -606,15 +616,25 @@ func GlobalStoreScores(c *gin.Context) {
 		// globalHighest := tempStoreScores[globalStoreScoreLength-1]
 		// globalLowest := tempStoreScores[0]
 
+		var topStoreScoreResponse []TopStoreScoreObject
+
+		for _, store := range stores {
+			topStoreScoreResponse = append(topStoreScoreResponse, TopStoreScoreObject{
+				StoreName:  store.StoreName,
+				TotalScore: math.Round(float64(store.TotalScore)),
+			})
+		}
+
 		// sort materials by total score get highest
-		sort.Slice(stores[:], func(i, j int) bool {
-			return stores[i].TotalScore > stores[j].TotalScore
+		sort.Slice(topStoreScoreResponse[:], func(i, j int) bool {
+			return topStoreScoreResponse[i].TotalScore > topStoreScoreResponse[j].TotalScore
 		})
 
 		// TODO round globalhighest and globalLowest totalscores
-		globalHighest := stores[0]
 
-		globalLowest := stores[globalStoreScoreLength-1]
+		globalHighest := topStoreScoreResponse[0]
+
+		globalLowest := topStoreScoreResponse[globalStoreScoreLength-1]
 
 		var regionalScores []RegionalScores
 
@@ -860,6 +880,9 @@ func MaterialScores(c *gin.Context) {
 		}
 
 		// TODO round totalScores for each material
+		// subcategory
+		// itemType
+		// totalscore
 
 		// sort materials by total score get highest
 		sort.Slice(materials[:], func(i, j int) bool {
@@ -895,6 +918,8 @@ func TopMaterialsArchitectId(c *gin.Context) {
 	} else {
 
 		// TODO round totalScores for each material
+		// itemType
+		// totalscore
 
 		// sort materials by total score get highest
 		sort.Slice(materials[:], func(i, j int) bool {
