@@ -12,6 +12,7 @@ package openapi
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 	"sort"
 	"strconv"
@@ -515,7 +516,7 @@ func TopDesigners(c *gin.Context) {
 		}
 		tempDesignerAverageScore := DesignerAverageScore{
 			Designer:     designer.Email,
-			AverageScore: averageFloat64(tempDesignerScores),
+			AverageScore: math.Round(averageFloat64(tempDesignerScores)),
 		}
 		designerAverages = append(designerAverages, tempDesignerAverageScore)
 	}
@@ -549,6 +550,11 @@ func TopStoreScores(c *gin.Context) {
 		if i > len(stores) {
 			i = len(stores)
 		}
+
+		// need to round
+		// for _, store := range stores {
+		// 	store.TotalScore = float32(math.Round(float64(store.TotalScore)))
+		// }
 
 		// sort stores by total score
 		sort.Slice(stores[:], func(i, j int) bool {
