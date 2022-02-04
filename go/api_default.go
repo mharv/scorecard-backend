@@ -947,8 +947,18 @@ func TopMaterialsArchitectId(c *gin.Context) {
 		sort.Slice(materials[:], func(i, j int) bool {
 			return materials[i].TotalScore > materials[j].TotalScore
 		})
+
+		var architectMaterials []TopMaterialScoresObject
+		for _, material := range materials {
+			architectMaterials = append(architectMaterials, TopMaterialScoresObject{
+				SubCategory: material.SubCategory,
+				ItemType:    material.ItemType,
+				TotalScore:  math.Round(float64(material.TotalScore)),
+			})
+		}
+
 		// change the slice number to get top x
-		c.JSON(http.StatusOK, materials[:5])
+		c.JSON(http.StatusOK, architectMaterials[:5])
 	}
 }
 func ScoresArchitectId(c *gin.Context) {
