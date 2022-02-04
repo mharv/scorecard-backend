@@ -551,7 +551,7 @@ func TopStoreScores(c *gin.Context) {
 			i = len(stores)
 		}
 
-		// need to round
+		// TODO need to round
 		// for _, store := range stores {
 		// 	store.TotalScore = float32(math.Round(float64(store.TotalScore)))
 		// }
@@ -598,7 +598,7 @@ func GlobalStoreScores(c *gin.Context) {
 			}
 		}
 
-		globalAverage := averageFloat64(tempStoreScores)
+		globalAverage := math.Round(averageFloat64(tempStoreScores))
 
 		// get highest and lowest scores, sort and get
 		globalStoreScoreLength := len(tempStoreScores)
@@ -611,6 +611,7 @@ func GlobalStoreScores(c *gin.Context) {
 			return stores[i].TotalScore > stores[j].TotalScore
 		})
 
+		// TODO round globalhighest and globalLowest totalscores
 		globalHighest := stores[0]
 
 		globalLowest := stores[globalStoreScoreLength-1]
@@ -618,10 +619,10 @@ func GlobalStoreScores(c *gin.Context) {
 		var regionalScores []RegionalScores
 
 		// append each region to regionalScores
-		regionalScores = append(regionalScores, RegionalScores{"ANZ", len(tempANZScores), averageFloat64(tempANZScores)})
-		regionalScores = append(regionalScores, RegionalScores{"Asia", len(tempAsiaScores), averageFloat64(tempAsiaScores)})
-		regionalScores = append(regionalScores, RegionalScores{"Europe", len(tempEuropeScores), averageFloat64(tempEuropeScores)})
-		regionalScores = append(regionalScores, RegionalScores{"Americas", len(tempAmericasScores), averageFloat64(tempAmericasScores)})
+		regionalScores = append(regionalScores, RegionalScores{"ANZ", len(tempANZScores), math.Round(averageFloat64(tempANZScores))})
+		regionalScores = append(regionalScores, RegionalScores{"Asia", len(tempAsiaScores), math.Round(averageFloat64(tempAsiaScores))})
+		regionalScores = append(regionalScores, RegionalScores{"Europe", len(tempEuropeScores), math.Round(averageFloat64(tempEuropeScores))})
+		regionalScores = append(regionalScores, RegionalScores{"Americas", len(tempAmericasScores), math.Round(averageFloat64(tempAmericasScores))})
 
 		response := GlobalStoreScoresResponse{
 			GlobalAverage:  globalAverage,
