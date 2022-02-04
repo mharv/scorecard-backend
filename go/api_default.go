@@ -805,21 +805,21 @@ func CategoryScores(c *gin.Context) {
 			}
 		}
 
-		globalFlooringAverage := averageFloat64(tempFlooringScores)
-		globalWallAverage := averageFloat64(tempWallScores)
-		globalCeilingAverage := averageFloat64(tempCeilingScores)
-		globalFacadeAverage := averageFloat64(tempFacadeScores)
-		globalPOSAverage := averageFloat64(tempPOSScores)
-		globalProductShelvingAverage := averageFloat64(tempProdShelvingScores)
-		globalBOHAverage := averageFloat64(tempBOHScores)
-		globalBasinAverage := averageFloat64(tempBasinScores)
-		globalFurnitureAverage := averageFloat64(tempFurnitureScores)
-		globalLightingAverage := averageFloat64(tempLightingScores)
-		globalFixturesAverage := averageFloat64(tempFixturesScores)
+		globalFlooringAverage := math.Round(averageFloat64(tempFlooringScores))
+		globalWallAverage := math.Round(averageFloat64(tempWallScores))
+		globalCeilingAverage := math.Round(averageFloat64(tempCeilingScores))
+		globalFacadeAverage := math.Round(averageFloat64(tempFacadeScores))
+		globalPOSAverage := math.Round(averageFloat64(tempPOSScores))
+		globalProductShelvingAverage := math.Round(averageFloat64(tempProdShelvingScores))
+		globalBOHAverage := math.Round(averageFloat64(tempBOHScores))
+		globalBasinAverage := math.Round(averageFloat64(tempBasinScores))
+		globalFurnitureAverage := math.Round(averageFloat64(tempFurnitureScores))
+		globalLightingAverage := math.Round(averageFloat64(tempLightingScores))
+		globalFixturesAverage := math.Round(averageFloat64(tempFixturesScores))
 
-		globalCSFAverage := averageFloat64(tempCSFScores)
-		globalFFAverage := averageFloat64(tempFFScores)
-		globalMUAverage := averageFloat64(tempMUScores)
+		globalCSFAverage := math.Round(averageFloat64(tempCSFScores))
+		globalFFAverage := math.Round(averageFloat64(tempFFScores))
+		globalMUAverage := math.Round(averageFloat64(tempMUScores))
 
 		response := CategoryScoresResponse{
 			GlobalFlooringAverage:        globalFlooringAverage,
