@@ -28,6 +28,12 @@ type DesignerAverageScore struct {
 	AverageScore float64 `json:"averageScore"`
 }
 
+type TopMaterialScoresObject struct {
+	SubCategory string  `json:"subCategory"`
+	ItemType    string  `json:"itemType"`
+	TotalScore  float64 `json:"totalScore"`
+}
+
 type RegionalScores struct {
 	Name         string  `json:"name"`
 	Count        int     `json:"count"`
@@ -99,8 +105,8 @@ type MaterialCountsResponse struct {
 }
 
 type MaterialScoresResponse struct {
-	HighestRatedMaterials []MaterialInstance `json:"highestRatedMaterials"`
-	LowestRatedMaterials  []MaterialInstance `json:"lowestRatedMaterials"`
+	HighestRatedMaterials []TopMaterialScoresObject `json:"highestRatedMaterials"`
+	LowestRatedMaterials  []TopMaterialScoresObject `json:"lowestRatedMaterials"`
 }
 
 type ScoresArchitectIdResponse struct {
@@ -630,8 +636,6 @@ func GlobalStoreScores(c *gin.Context) {
 			return topStoreScoreResponse[i].TotalScore > topStoreScoreResponse[j].TotalScore
 		})
 
-		// TODO round globalhighest and globalLowest totalscores
-
 		globalHighest := topStoreScoreResponse[0]
 
 		globalLowest := topStoreScoreResponse[globalStoreScoreLength-1]
@@ -890,15 +894,33 @@ func MaterialScores(c *gin.Context) {
 		})
 
 		tmp := materials[:i]
-		highestRatedMaterials := make([]MaterialInstance, len(tmp))
-		copy(highestRatedMaterials, tmp)
+		// highestRatedMaterials := make([]MaterialInstance, len(tmp))
+		// copy(highestRatedMaterials, tmp)
+
+		var highestRatedMaterials []TopMaterialScoresObject
+		for _, material := range tmp {
+			highestRatedMaterials = append(highestRatedMaterials, TopMaterialScoresObject{
+				SubCategory: material.SubCategory,
+				ItemType:    material.ItemType,
+				TotalScore:  math.Round(float64(material.TotalScore)),
+			})
+		}
 
 		// sort materials by total score get highest
 		sort.Slice(materials[:], func(i, j int) bool {
 			return materials[i].TotalScore < materials[j].TotalScore
 		})
 
-		lowestRatedMaterials := materials[:i]
+		// lowestRatedMaterials := materials[:i]
+		tmpLowest := materials[:i]
+		var lowestRatedMaterials []TopMaterialScoresObject
+		for _, material := range tmpLowest {
+			lowestRatedMaterials = append(lowestRatedMaterials, TopMaterialScoresObject{
+				SubCategory: material.SubCategory,
+				ItemType:    material.ItemType,
+				TotalScore:  math.Round(float64(material.TotalScore)),
+			})
+		}
 
 		response := MaterialScoresResponse{
 			HighestRatedMaterials: highestRatedMaterials,
