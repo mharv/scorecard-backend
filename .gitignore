@@ -1,4 +1,5 @@
 .env
+.deployInstructions
 
 # Package test fixtures
 test_fixtures
