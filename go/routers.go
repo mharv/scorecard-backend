@@ -210,6 +210,13 @@ var routes = Routes{
 	},
 
 	{
+		"GetStoresArchitectIdSummary",
+		http.MethodGet,
+		"/storesByArchitectSummary/:architectId",
+		GetStoresArchitectIdSummary,
+	},
+
+	{
 		"GetStoresContractorId",
 		http.MethodGet,
 		"/storesByContractor/:contractorId",

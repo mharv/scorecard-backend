@@ -1141,6 +1141,27 @@ func GetStoresArchitectId(c *gin.Context) {
 	}
 }
 
+func GetStoresArchitectIdSummary(c *gin.Context) {
+	id := c.Params.ByName("architectId")
+	var stores []Store
+
+	if result := Config.DB.Where("architectId = ?", id).Or("creatorId = ?", id).Find(&stores); result.Error != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+
+		var topStoreScoreResponse []TopStoreScoreObject
+
+		for _, store := range stores {
+			topStoreScoreResponse = append(topStoreScoreResponse, TopStoreScoreObject{
+				StoreName:  store.StoreName,
+				TotalScore: math.Round(float64(store.TotalScore)),
+			})
+		}
+
+		c.JSON(http.StatusOK, topStoreScoreResponse)
+	}
+}
+
 func GetStoresContractorId(c *gin.Context) {
 	id := c.Params.ByName("contractorId")
 	var stores []Store
@@ -1251,7 +1272,6 @@ func PostComment(c *gin.Context) {
 func PostMaterialInstance(c *gin.Context) {
 	var materialInstance MaterialInstance
 	c.BindJSON(&materialInstance)
-
 
 	materialInstance.CreatedDate = time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	// pass incoming material instance to function
