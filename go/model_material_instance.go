@@ -76,6 +76,10 @@ type MaterialInstance struct {
 	A4CarbonFactor float32 `json:"A4CarbonFactor,omitempty" gorm:"column:A4CarbonFactor"`
 
 	PrimaryTransportMethod string `json:"primaryTransportMethod,omitempty" gorm:"column:primaryTransportMethod"`
+
+	LifeSpan float32 `json:"lifeSpan,omitempty" gorm:"column:lifeSpan"`
+
+	MaintenanceFrequency float32 `json:"maintenanceFrequency,omitempty" gorm:"column:maintenanceFrequency"`
 }
 
 func (b *MaterialInstance) TableName() string {
