@@ -1252,6 +1252,8 @@ func PostMaterialInstance(c *gin.Context) {
 	var materialInstance MaterialInstance
 	c.BindJSON(&materialInstance)
 
+
+	materialInstance.CreatedDate = time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	// pass incoming material instance to function
 	// set values based on lookups in calcs
 	setMaterialScores(&materialInstance)
