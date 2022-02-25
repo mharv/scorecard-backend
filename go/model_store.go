@@ -24,7 +24,7 @@ type Store struct {
 
 	LocationType string `json:"locationType,omitempty" gorm:"column:locationType"`
 
-	RoicCapex string `json:"roicCapex,omitempty" gorm:"column:roicCapex"`
+	RoicCapex int32 `json:"roicCapex,omitempty" gorm:"column:roicCapex"`
 
 	Currency string `json:"currency,omitempty" gorm:"column:currency"`
 
